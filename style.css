@@ -1,0 +1,388 @@
+html{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  font-family:"Press Start 2P";
+}
+
+canvas{
+
+  border: 3px solid #000;
+  margin: auto;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 45%;
+  right: 0;
+  background: url("RESOURCES/MS4Mission1.png") no-repeat;
+  background-size: cover;
+  position: absolute;
+}
+
+body{
+
+
+  display: block;
+  background: url("RESOURCES/Imagem1.png") no-repeat;
+  background-size: 100vw 100vh;
+  height: auto;
+  overflow: hidden;
+
+}
+
+.keyboard{
+	margin: auto;
+  display: block;
+  position: absolute;
+	width: 300px;
+	height: 200px;
+	margin-left: 28%;
+	margin-top: 12%;
+}
+
+#uparrow{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-left: 30%;
+}
+
+#downarrow{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 30%;
+	margin-left: 30%;
+}
+
+#leftarrow{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 30%;
+	margin-left: 0%;
+}
+
+#rightarrow{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 30%;
+	margin-left: 60%;
+}
+
+#akey{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 60%;
+	margin-left: 0%;
+}
+
+#dkey{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 60%;
+	margin-left: 60%;
+}
+
+#space{
+	margin: auto;
+  display: block;
+  position: absolute;
+	margin-top: 90%;
+	margin-left: 0%;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+h1 {
+  color: #c3ae93;
+  font-size: 110px;
+  letter-spacing: 5px;
+  top: 1%;
+  left: 5%;
+  position: absolute;
+  text-transform: uppercase;
+  animation: move linear 2000ms infinite;
+}
+
+@keyframes move {
+  0% {
+    text-shadow:
+      4px -4px 0 #668878,
+      3px -3px 0 #668878,
+      2px -2px 0 #668878,
+      1px -1px 0 #668878,
+      -4px 4px 0 #7f4430,
+      -3px 3px 0 #7f4430,
+      -2px 2px 0 #7f4430,
+      -1px 1px 0 #7f4430
+    ;
+  }
+  25% {
+    text-shadow:
+      -4px -4px 0 #7f4430,
+      -3px -3px 0 #7f4430,
+      -2px -2px 0 #7f4430,
+      -1px -1px 0 #7f4430,
+      4px 4px 0 #668878,
+      3px 3px 0 #668878,
+      2px 2px 0 #668878,
+      1px 1px 0 #668878
+    ;
+  }
+  50% {
+    text-shadow:
+      -4px 4px 0 #668878,
+      -3px 3px 0 #668878,
+      -2px 2px 0 #668878,
+      -1px 1px 0 #668878,
+      4px -4px 0 #7f4430,
+      3px -3px 0 #7f4430,
+      2px -2px 0 #7f4430,
+      1px -1px 0 #7f4430
+    ;
+  }
+  75% {
+    text-shadow:
+      4px 4px 0 #7f4430,
+      3px 3px 0 #7f4430,
+      2px 2px 0 #7f4430,
+      1px 1px 0 #7f4430,
+      -4px -4px 0 #668878,
+      -3px -3px 0 #668878,
+      -2px -2px 0 #668878,
+      -1px -1px 0 #668878
+    ;
+  }
+  100% {
+    text-shadow:
+      4px -4px 0 #668878,
+      3px -3px 0 #668878,
+      2px -2px 0 #668878,
+      1px -1px 0 #668878,
+      -4px 4px 0 #7f4430,
+      -3px 3px 0 #7f4430,
+      -2px 2px 0 #7f4430,
+      -1px 1px 0 #7f4430
+    ;
+  }
+}
+
+sup{
+  position: absolute;
+  top: 95%;
+  left: 93%;
+}
+
+.button_container {
+	position: absolute;
+  left: 0%;
+  right: 0;
+  top: 35%;
+}
+
+.nav1{
+
+  position: absolute;
+  left: 5%;
+  top:40%;
+
+}
+
+button:hover{
+  box-shadow: 0 0 20px #000;
+
+  width: 400px;
+  height: 90px;
+  font-size: 30px;
+  transition: all .3s ease-in-out;
+  animation: neon4 1.5s ease-in-out infinite alternate;
+}
+
+.description, .link {
+  font-family: "Press Start 2P";
+  text-align: center;
+}
+
+.link {
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.link a {
+  color: #000;
+  font-size: 25px;
+}
+
+.btn {
+  border: 1px solid #000;
+  width: 350px;
+  height: 65px;
+  -webkit-transform: skewY(-4deg); -moz-transform: skewY(-4deg); -o-transform: skewY(-4deg);
+  display: block;
+  cursor: pointer;
+  text-transform: uppercase;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  color: #c3ae93;
+  font-weight: bold;
+  font-size: 25px;
+  background-color: rgba(127,68,48,0.8);
+  padding: 17px 60px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.20);
+}
+
+.btn span {
+  position: relative;
+  text-align: center;
+  z-index: 5;
+}
+
+.btn:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  height: 490%;
+  width: 140%;
+  background: #668878;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+  -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+  transform: translateX(-98%) translateY(-25%) rotate(45deg);
+}
+
+.btn:hover:after {
+
+  -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
+  transform: translateX(-9%) translateY(-25%) rotate(45deg);
+}
+
+#background-wrap {
+  bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top:0;
+	z-index: -1;
+}
+
+/* KEYFRAMES */
+
+@keyframes animateCloud {
+    0% {
+        margin-left: -1000px;
+    }
+    100% {
+        margin-left: 100%;
+    }
+}
+
+/* ANIMATIONS */
+
+.x1 {
+	animation: animateCloud 165s linear infinite;
+	transform: scale(0.65);
+}
+
+.x2 {
+
+	animation: animateCloud 140s linear infinite;
+
+	transform: scale(0.3);
+}
+
+.x3 {
+
+	animation: animateCloud 80s linear infinite;
+
+	transform: scale(1);
+}
+
+.x4 {
+
+	animation: animateCloud 100s linear infinite;
+
+	transform: scale(1);
+}
+
+
+/* OBJECTS */
+
+
+.cloud:after {
+
+	border-radius: 100px;
+
+	height: 100px;
+	left: 50px;
+	top: -50px;
+	width: 100px;
+}
+
+.cloud:before {
+
+	border-radius: 200px;
+
+	width: 180px;
+	height: 300px;
+	right: 50px;
+	top: -90px;
+}
+
+
+@keyframes neon4 {
+  from {
+    text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000, 0 0 40px #c3ae93, 0 0 70px #c3ae93, 0 0 80px #c3ae93, 0 0 100px #c3ae93, 0 0 150px #c3ae93;
+  }
+  to {
+    text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000, 0 0 20px #c3ae93, 0 0 35px #c3ae93, 0 0 40px #c3ae93, 0 0 50px #c3ae93, 0 0 75px #c3ae93;
+  }
+}
+
+
+#wrapper {
+  -webkit-text-stroke-width: 0.3px;
+  -webkit-text-stroke-color: #000;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 50%;
+  margin-left: 25%;
+  font: 300 30px/1 'Open Sans Condensed', sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  animation: 180s credits linear infinite;
+}
+
+#movie {
+  margin-bottom: 50px;
+  font-size: 50px;
+}
+
+#job {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+#name {
+  margin-bottom: 50px;
+  font-size: 35px;
+}
+
+@keyframes credits {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -500%;
+  }
+}

@@ -3,7 +3,9 @@ const enemyrested1= ["RESOURCES/soldierRest1.png","RESOURCES/soldierRest2.png","
 const enemyrested = ["RESOURCES/soldierRest1l.png","RESOURCES/soldierRest2l.png","RESOURCES/soldierRest3l.png","RESOURCES/soldierRest2l.png"];
 const shootenemy = ["RESOURCES/soldiershoot1.png","RESOURCES/soldiershoot2.png","RESOURCES/soldiershoot3.png","RESOURCES/soldiershoot4.png"
 										,"RESOURCES/soldiershoot5.png","RESOURCES/soldiershoot6.png","RESOURCES/soldiershoot8.png","RESOURCES/soldiershoot9.png"];
-
+const shootenemy1 = ["RESOURCES/soldiershoot1l.png","RESOURCES/soldiershoot2l.png","RESOURCES/soldiershoot3l.png","RESOURCES/soldiershoot4l.png"
+									,"RESOURCES/soldiershoot5l.png","RESOURCES/soldiershoot6l.png","RESOURCES/soldiershoot8l.png","RESOURCES/soldiershoot9l.png"];
+const die= ["RESOURCES/soldierdie1.png","RESOURCES/soldierdie2.png","RESOURCES/soldierdie3.png","RESOURCES/soldierdie4.png","RESOURCES/soldierdie4.png"];
 
 class NPC{
 
@@ -20,8 +22,9 @@ class NPC{
 		this.dy = speedy;
 		this.ctx = ctx;
 		this.canvas = canvas;
-		this.sw = 1;
+		this.sw = 0;
 		this.sh = 0;
+		this.sd = 0;
 		this.side = 2;
 		this.bullets = [];
 	}
@@ -47,6 +50,15 @@ class NPC{
 		}else if(this.side === 1){
 			this.width = 145;
 			this.rest1(anim);
+		}else if(this.side === 2){
+			this.width = 188;
+			this.shoot(anim);
+		}else if(this.side === 3){
+			this.width = 188;
+			this.shoot1(anim);
+		}else if(this.side === 4){
+			this.width = 145;
+			this.die(anim);
 		}
 
 		this.dy += 2;
@@ -92,6 +104,23 @@ class NPC{
 		if(x === 3){
 			this.sh++;
 			this.img.src = shootenemy[this.sh % 8];
+		}
+	}
+
+	shoot1(frame){
+		var x = frame % 10;
+		if(x === 3){
+			this.sh++;
+			this.img.src = shootenemy1[this.sh % 8];
+		}
+	}
+
+	die(frame){
+		var x = frame % 12;
+		if(x === 3){
+			this.img.src = die[this.sd % 5];
+			this.sd++;
+
 		}
 	}
 

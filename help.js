@@ -6,7 +6,6 @@ const format = ".png";
 (function()
 {
 	window.addEventListener("load", main);
-	window.opener.close();
 }());
 
 function main() {
@@ -148,7 +147,7 @@ function init(){
 			spriteArray[0].grenadeArray[i].update();
 		}
 
-		if(spriteArray[0].bulletArray.length >= 50){
+		if(spriteArray[0].bulletArray.x >= iw || spriteArray[0].bulletArray.y <= 0){
 			spriteArray[0].bulletArray.splice(0,spriteArray[0].bulletArray.length)
 		}
 		if(spriteArray[0].grenadeArray.length >= 100){
@@ -169,7 +168,7 @@ function init(){
 
 function windowChangerHandeler(ev){
 
-	var popup = window.open("mainMenu.html");
+	window.location = "mainMenu.html";
 	popup.postMessage("go");
 	console.log("sent");
 	window.href =""

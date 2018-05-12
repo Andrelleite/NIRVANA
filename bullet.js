@@ -1,19 +1,22 @@
+const w = 20;
+const h = 20;
+
+const popup1 = ["RESOURCES/rested1.png","RESOURCES/rested2.png","RESOURCES/rested3.png","RESOURCES/rested2.png"];
+
 class Bullet{
 
-	constructor(x,y,dx,dy,ctx,canvas){
+	constructor(img,x,y,dx,dy,ctx,canvas){
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
 		this.ctx = ctx;
+		this.img = img;
+		this.time = 0;
 	}
 
-	goBullet(){
-		this.ctx.beginPath();
-		this.ctx.arc(this.x,this.y,10,0,Math.PI*2);
-		this.ctx.stroke();
-		this.ctx.fillStyle = "white";
-		this.ctx.fill();
+	goBullet(ctx){
+		ctx.drawImage(this.img,this.x,this.y,w,h);
 	}
 
 	update(){
@@ -21,7 +24,15 @@ class Bullet{
 		this.x += this.dx*0.7;
 		this.y += this.dy*0.8;
 
-		this.goBullet();
+		this.goBullet(this.ctx);
 	}
+
+	stop(time){
+
+		this.x += this.dx*0;
+		this.goBullet(this.ctx);
+
+	}
+
 
 }

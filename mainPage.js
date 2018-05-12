@@ -4,7 +4,7 @@
 (function()
 {
     window.addEventListener("load", main);
-    window.opener.close();
+		opener.close();
 
 }());
 
@@ -14,20 +14,31 @@ function main() {
     var btnExit = document.getElementById("exit");
     var btnCredit = document.getElementById("credits");
     var btnHelp = document.getElementById("help");
+		var btnops = document.getElementById("options");
+		var btnPlay = document.getElementById("play");
 
     btnExit.addEventListener("click",function(){
         console.log("click");
         window.close();
     });
     btnCredit.addEventListener("click",function(){
-        var popup = window.open("credits.html");
+        window.open("credits.html");
         popup.postMessage("go");
     });
     btnHelp.addEventListener("click",function(){
-        window.open("help.html").postMessage("go","*");
+        window.open("help.html");
 				console.log(popup);
 				console.log("sending...")
     });
+		btnops.addEventListener("click",function(){
+				window.open("options.html");
+				console.log(popup);
+				console.log("sending...")
+		});
+		btnPlay.addEventListener("click",function(){
+			window.open("game.html");
+
+		})
 
     function receiveMessage(event)
     {

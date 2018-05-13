@@ -6,6 +6,8 @@ const shootenemy = ["RESOURCES/soldiershoot1.png","RESOURCES/soldiershoot2.png",
 const shootenemy1 = ["RESOURCES/soldiershoot1l.png","RESOURCES/soldiershoot2l.png","RESOURCES/soldiershoot3l.png","RESOURCES/soldiershoot4l.png"
 									,"RESOURCES/soldiershoot5l.png","RESOURCES/soldiershoot6l.png","RESOURCES/soldiershoot8l.png","RESOURCES/soldiershoot9l.png"];
 const die= ["RESOURCES/soldierdie1.png","RESOURCES/soldierdie2.png","RESOURCES/soldierdie3.png","RESOURCES/soldierdie4.png","RESOURCES/soldierdie4.png"];
+const die1= ["RESOURCES/soldierdie1l.png","RESOURCES/soldierdie2l.png","RESOURCES/soldierdie3l.png","RESOURCES/soldierdie4l.png","RESOURCES/soldierdie4l.png"];
+const bullet2 = ["RESOURCES/bullet.png"];
 
 class NPC{
 
@@ -27,6 +29,12 @@ class NPC{
 		this.sd = 0;
 		this.side = 2;
 		this.bullets = [];
+
+		var newCan = document.createElement("canvas");
+		this.newCtx = newCan.getContext("2d");
+		this.newCtx.drawImage(this.img, 0,0,this.width,this.height);
+		this.imgData =this.newCtx.getImageData(0,0,this.width,this.height).data;
+
 	}
 
 	draw(ctx){
@@ -58,12 +66,16 @@ class NPC{
 			this.shoot1(anim);
 		}else if(this.side === 4){
 			this.width = 145;
-			this.die(anim);
+			this.actiondie(anim);
+		}else if(this.side === 5){
+			this.width = 145;
+			this.actiondie1(anim);
 		}
+
 
 		this.dy += 2;
 		this.y += this.dy;
-		this.dy *= 0.87;
+		this.dy *= 0.95;
 
 		if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
 				this.y = this.canvas.scrollHeight-(2*this.height);
@@ -104,6 +116,9 @@ class NPC{
 		if(x === 3){
 			this.sh++;
 			this.img.src = shootenemy[this.sh % 8];
+			if(this.sh % 8 === 2){
+				this.goBullet(this.ctx,this.x,this.y+12,-20,0);
+			}
 		}
 	}
 
@@ -112,16 +127,99 @@ class NPC{
 		if(x === 3){
 			this.sh++;
 			this.img.src = shootenemy1[this.sh % 8];
+			if(this.sh % 8 === 2){
+				this.goBullet(this.ctx,this.x+this.width,this.y+12,20,0);
+			}
 		}
 	}
 
-	die(frame){
+	actiondie(frame){
 		var x = frame % 12;
 		if(x === 3){
 			this.img.src = die[this.sd % 5];
 			this.sd++;
 
 		}
+	}
+
+	actiondie1(frame){
+		var x = frame % 12;
+		if(x === 3){
+			this.img.src = die1[this.sd % 5];
+			this.sd++;
+
+		}
+	}
+
+	goBullet(ctx,x,y,dx,dy,frame){
+		var bullet;
+		var bul = new Image();
+		bul.src = bullet2[0];
+		bullet = new Bullet(bul,x,y,dx,dy,ctx,this.canvas);
+		this.bullets.push(bullet);
+	}
+
+
+	colisao_sprite(turbo,ctx){
+
+		if(this.x<turbo.x && this.x+this.width>turbo.x && this.y<turbo.y && this.y+this.height>turbo.y){
+			var comprimento=Math.round(Math.min(turbo.width,this.x+this.width-turbo.x));
+			var altura=Math.round(Math.min(turbo.height, this.y+this.height-turbo.y));
+
+			var xxcarro=Math.round(turbo.x-this.x);
+			var yycarro=Math.round(turbo.y-this.y);
+
+			var xx;
+			var yy;
+
+			if(comprimento && altura){
+				for( xx=0; xx<comprimento; xx++){
+					for( yy=0; yy<comprimento; yy++){
+						if( turbo.imgData[yy*turbo.width*4 + xx*4 + 3] && this.imgData[(yycarro+yy)*this.width*4  + (xxcarro+xx)*4 + 3] )
+							return true;
+					}
+				}
+			}
+
+		}
+		if(this.x<turbo.x && this.x+this.width>turbo.x && this.y<turbo.y+turbo.height && this.y+this.height>turbo.y+turbo.height){
+			var comprimento=Math.round(Math.min(turbo.width,this.x+this.width-turbo.x));
+			var altura=Math.round(Math.min(turbo.height, turbo.y+turbo.height-this.y ));
+
+			var xxcarro=Math.round(turbo.x-this.x);
+			var yycarro=Math.round(turbo.y+turbo.height-this.y);
+
+			var xxturbo=Math.round(turbo.x);
+			var yyturbo=Math.round(turbo.y+turbo.height-altura);
+
+			var xx;
+			var yy;
+
+			if(comprimento && altura){
+				for( xx=0; xx<comprimento; xx++){
+					for( yy=0; yy<comprimento; yy++){
+						if( turbo.imgData[(yyturbo+yy)*turbo.width*4 + (xxturbo+xx)*4 + 3] && this.imgData[(yycarro+yy)*this.width*4  + (xxcarro+xx)*4 + 3] ){
+							return true;
+						}
+
+					}
+				}
+			}
+
+		}
+
+		return false;
+	}
+
+	colisao(turbo){
+		if( !(this.x > turbo.x + turbo.width) &&
+			!(this.x+this.width < turbo.x)  &&
+			!(this.y > turbo.y + turbo.height) &&
+			!(this.y + this.height < turbo.y  )
+		)
+			return true;
+		return false;
+
 	}
 
 

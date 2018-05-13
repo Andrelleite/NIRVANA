@@ -127,6 +127,30 @@ function init(){
 
 		});
 
+
+		if(spriteArray[0].state){
+			for (var i = 0; i < enemyArray[0].bullets.length; i++) {
+				enemyArray[0].bullets[i].update();
+				if (enemyArray[0].bullets[i].x >= spriteArray[0].x && enemyArray[0].bullets[i].y <= spriteArray[0].y + spriteArray[0].height) {
+					if(enemyArray[0].bullets[i].x <= spriteArray[0].x + spriteArray[0].width && enemyArray[0].bullets[i].y > spriteArray[0].y){
+						if(spriteArray[0].colisao(enemyArray[0].bullets[i])){
+							if(spriteArray[0].colisao_sprite(enemyArray[0].bullets[i],ctx)){
+								console.log("pass 3");
+								enemyArray[0].bullets.splice(i,1);
+								spriteArray[0].state = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+		else if(spriteArray[0].sd === 9){
+			spriteArray.splice(0,1);
+			var x = Math.floor(Math.random() * iw-105)+1;
+			var novo = new Sprite(x,y,92,110,img,dx,dy,ctx,canvas,true);
+			spriteArray.push(novo);
+		}
+
 		for (var i = 0; i < spriteArray[0].bulletArray.length; i++) {
 			spriteArray[0].bulletArray[i].update();
 
@@ -134,12 +158,21 @@ function init(){
 
 			}else if (spriteArray[0].bulletArray[i].x >= enemyArray[0].x && spriteArray[0].bulletArray[i].y <= enemyArray[0].y + enemyArray[0].height) {
 				if(spriteArray[0].bulletArray[i].x <= enemyArray[0].x + enemyArray[0].width && spriteArray[0].bulletArray[i].y > enemyArray[0].y){
-					spriteArray[0].bulletArray.splice(i,1);
-					enemyArray.splice(0,1);
-					console.log("hit");
-					var x = Math.floor(Math.random() * iw-105)+1;
-					var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
-					enemyArray.push(en);
+					if(enemyArray[0].colisao(spriteArray[0].bulletArray[i])){
+						if(enemyArray[0].colisao_sprite(spriteArray[0].bulletArray[i],ctx)){
+							spriteArray[0].bulletArray.splice(i,1);
+							if(enemyArray[0].side === 1 || enemyArray[0].side === 3){
+								enemyArray[0].side = 5;
+							}
+							else if(enemyArray[0].side === 2 || enemyArray[0].side === 0){
+								enemyArray[0].side = 4;
+							}
+						}
+					}
+
+
+
+
 				}
 			}
 		}
@@ -156,14 +189,30 @@ function init(){
 			spriteArray[0].grenadeArray.splice(0,spriteArray[0].grenadeArray.length)
 		}
 
-
-		for (var i = 0; i < enemyArray.length; i++) {
-			if(spriteArray[0].x <= enemyArray[i].x ){
-				enemyArray[i].side = 0;
-			}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[i].x + enemyArray[i].width){
-				enemyArray[i].side = 1;
+		if(enemyArray[0].side !== 4 &&  enemyArray[0].side !== 5){
+			for (var i = 0; i < enemyArray.length; i++) {
+				if(spriteArray[0].x <= enemyArray[i].x ){
+					if(distance(spriteArray[0].x,enemyArray[i].x) > 650){
+						enemyArray[i].side = 0;
+					}else{
+						enemyArray[i].side = 2;
+					}
+				}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[i].x + enemyArray[i].width){
+					if(distance(spriteArray[0].x,enemyArray[i].x + enemyArray[i].width) > 650){
+						enemyArray[i].side = 1;
+					}else{
+						enemyArray[i].side = 3;
+					}
+				}
 			}
 		}
+		else if(enemyArray[0].sd === 5){
+				enemyArray.splice(0,1);
+				var x = Math.floor(Math.random() * iw-105)+1;
+				var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
+				enemyArray.push(en);
+		}
+
 
 	}
 	animate();

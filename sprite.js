@@ -268,7 +268,24 @@ class Sprite{
 
 				else{
 					this.width = 120;
+					this.dy += 2;
+				  this.x += this.dx;
+				  this.y += this.dy;
+				  this.dx *= 0.2;
+				  this.dy *= 0.87;
 					this.die(time);
+
+					if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
+					 if(this.prone){
+						 this.y = this.canvas.scrollHeight-(2*this.height);
+						 this.dy = 0;
+					 }
+					 else{
+						 this.y = this.canvas.scrollHeight-(2*this.height);
+						 this.dy = 0;
+					 }
+				 }
+
 				}
 
 				this.draw(ctx);

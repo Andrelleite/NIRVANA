@@ -15,7 +15,11 @@ function main() {
 		var onoff = document.getElementById("som");
 		var vol = sessionStorage.getItem("Volume");
 
-  	btnBack.addEventListener("click",function(){
+		if(vol == -1){
+			 onoff.src = "RESOURCES/SoundOff.png";
+		}
+
+		btnBack.addEventListener("click",function(){
 			sessionStorage.setItem("Time",myAudio.currentTime);
 			window.location = "mainMenu.html";
 			console.log("sent");
@@ -24,12 +28,12 @@ function main() {
 	 onoff.addEventListener("click",function() {
 		 vol *= -1;
 		 console.log(vol);
-
 		 if(vol === 1){
-			 onoff.src = "RESOURCES/Soundon.png";
+		 		onoff.src = "RESOURCES/Soundon.png";
 		 }else{
-			 onoff.src = "RESOURCES/SoundOff.png";
+		 		onoff.src = "RESOURCES/SoundOff.png";
 		 }
+
 		 sessionStorage.setItem("Volume",vol);
 		 update();
 	 })

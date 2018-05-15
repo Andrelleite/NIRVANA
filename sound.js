@@ -13,13 +13,14 @@ function update()
 		var vol = sessionStorage.getItem("Volume");
 
 		if(vol == -1){
-			myAudio.pause();
+			myAudio.muted = true;
 			console.log("paused");
 
 		}else{
 			console.log("playing");
 
 			myAudio.currentTime = aValue;
-			myAudio.play();
+			myAudio.muted = false;
+
 		}
 }

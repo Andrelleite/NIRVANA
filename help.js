@@ -6,6 +6,8 @@ const format = ".png";
 (function()
 {
 	window.addEventListener("load", main);
+	opener.close();
+
 }());
 
 function main() {
@@ -167,6 +169,9 @@ function init(){
 
 
 function windowChangerHandeler(ev){
+	var myAudio= document.getElementById("aud");
+
+	sessionStorage.setItem("Time",myAudio.currentTime);
 
 	window.location = "mainMenu.html";
 	popup.postMessage("go");

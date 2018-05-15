@@ -11,32 +11,41 @@
 function main() {
 
     window.addEventListener("message", receiveMessage, false);
+		var myAudio= document.getElementById("aud");
     var btnExit = document.getElementById("exit");
     var btnCredit = document.getElementById("credits");
     var btnHelp = document.getElementById("help");
 		var btnops = document.getElementById("options");
 		var btnPlay = document.getElementById("play");
 
+
     btnExit.addEventListener("click",function(){
         console.log("click");
         window.close();
     });
     btnCredit.addEventListener("click",function(){
+			sessionStorage.setItem("Time",myAudio.currentTime);
+
         window.open("credits.html");
         popup.postMessage("go");
     });
     btnHelp.addEventListener("click",function(){
+			sessionStorage.setItem("Time",myAudio.currentTime);
+
         window.open("help.html");
 				console.log(popup);
 				console.log("sending...")
     });
 		btnops.addEventListener("click",function(){
+			sessionStorage.setItem("Time",myAudio.currentTime);
+
 				window.open("options.html");
 				console.log(popup);
 				console.log("sending...")
 		});
 		btnPlay.addEventListener("click",function(){
-			window.open("game.html");
+			sessionStorage.setItem("Time",myAudio.currentTime);
+			window.open("selector.html");
 
 		})
 

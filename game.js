@@ -24,12 +24,8 @@ function main() {
 
 function init(){
 
-	var btnBack = document.getElementById("back");
-	btnBack.addEventListener("click",windowChangerHandeler);
+
 	var control = new Controller();
-
-
-
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
 	var iw = canvas.scrollWidth;
@@ -51,18 +47,27 @@ function init(){
 	var novo = new Sprite(x,y,92,110,img,dx,dy,ctx,canvas,true);
 	spriteArray.push(novo);
 
-	for (var i = 0; i < 1; i++) {
-		var x = Math.floor(Math.random() * iw-105)+1;
-		var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
-		enemyArray.push(en);
-	}
+	var x = Math.floor(Math.random() * iw-105)+1;
+	var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
+	var enemy = new Image();
+	enemy.src = "RESOURCES/soldierRest1.png";
+	enemyArray.push(en);
+
+	document.getElementById('timer').innerHTML = "5:00";
+	Timer();
+
+ 	ctx.font="20px Georgia";
+	var k = document.getElementsByTagName("p")[0];
+	console.log(k);
 
 	function animate(){
 
+		if(control.exit === -1){
+			windowChangerHandeler()
+		}
 		var anim = requestAnimationFrame(animate);
 		ctx.clearRect(0,0,iw,ih);
 		spriteArray[0].update(ctx,iw,ih,control,anim);
-		enemyArray[0].update(anim);
 		/*Event listener para entrada de botão*/
 		window.addEventListener("keydown",function(event) {
 
@@ -90,6 +95,9 @@ function init(){
 					break;
 				case 68:// d key
 					control.trow = key_state;
+					break;
+				case 27:// d key
+					control.exit *= -1;
 					break;
 			}
 
@@ -127,108 +135,117 @@ function init(){
 
 		});
 
+		for (var x = 0; x < 1; x++) {
+			enemyArray[x].update(anim);
 
-		if(spriteArray[0].state){
-			for (var i = 0; i < enemyArray[0].bullets.length; i++) {
-				enemyArray[0].bullets[i].update();
-				if (enemyArray[0].bullets[i].x >= spriteArray[0].x && enemyArray[0].bullets[i].y <= spriteArray[0].y + spriteArray[0].height) {
-					if(enemyArray[0].bullets[i].x <= spriteArray[0].x + spriteArray[0].width && enemyArray[0].bullets[i].y > spriteArray[0].y){
-						if(spriteArray[0].colisao(enemyArray[0].bullets[i])){
-							if(spriteArray[0].colisao_sprite(enemyArray[0].bullets[i],ctx)){
-								console.log("pass 3");
-								enemyArray[0].bullets.splice(i,1);
+
+
+			for (var i = 0; i < enemyArray[x].bullets.length; i++) {
+					enemyArray[x].bullets[i].update(anim);
+					if(enemyArray[x].bullets[i].x >= iw || enemyArray[x].bullets[i].y <= 0){
+						enemyArray[x].bullets.splice(i,1);
+					}
+					if(enemyArray[x].bullets[i].p >= 4){
+						enemyArray[x].bullets.splice(i,1);
+					}
+					else if (enemyArray[x].bullets[i].x >= spriteArray[0].x && enemyArray[x].bullets[i].y <= spriteArray[0].y + spriteArray[0].height) {
+						if(enemyArray[x].bullets[i].x <= spriteArray[0].x + spriteArray[0].width && enemyArray[x].bullets[i].y > spriteArray[0].y){
+
+							if(pixelCollision(spriteArray[0],enemyArray[x].bullets[i])){
+								enemyArray[x].bullets[i].pop = 1;
 								spriteArray[0].state = 0;
 							}
 						}
 					}
 				}
+
+			if(spriteArray[0].d === 9){
+
+				spriteArray.splice(0,1);
+				var a = Math.floor(Math.random() * iw-105)+1;
+				var novo = new Sprite(a,y,92,110,img,dx,dy,ctx,canvas,true);
+				spriteArray.push(novo);
 			}
-		}
-		else if(spriteArray[0].sd === 9){
-			spriteArray.splice(0,1);
-			var x = Math.floor(Math.random() * iw-105)+1;
-			var novo = new Sprite(x,y,92,110,img,dx,dy,ctx,canvas,true);
-			spriteArray.push(novo);
-		}
 
-		for (var i = 0; i < spriteArray[0].bulletArray.length; i++) {
-			spriteArray[0].bulletArray[i].update();
+			for (var i = 0; i < spriteArray[0].bulletArray.length; i++) {
+				spriteArray[0].bulletArray[i].update(anim);
 
-			if(spriteArray[0].bulletArray[i].x >= iw || spriteArray[0].bulletArray[i].y <= 0){
+				if(spriteArray[0].bulletArray[i].x >= iw || spriteArray[0].bulletArray[i].y <= 0){
+					spriteArray[0].bulletArray.splice(i,1);
 
-			}else if (spriteArray[0].bulletArray[i].x >= enemyArray[0].x && spriteArray[0].bulletArray[i].y <= enemyArray[0].y + enemyArray[0].height) {
-				if(spriteArray[0].bulletArray[i].x <= enemyArray[0].x + enemyArray[0].width && spriteArray[0].bulletArray[i].y > enemyArray[0].y){
-					if(enemyArray[0].colisao(spriteArray[0].bulletArray[i])){
-						if(enemyArray[0].colisao_sprite(spriteArray[0].bulletArray[i],ctx)){
-							spriteArray[0].bulletArray.splice(i,1);
-							if(enemyArray[0].side === 1 || enemyArray[0].side === 3){
-								enemyArray[0].side = 5;
+				}
+				if(spriteArray[0].bulletArray[i].p >= 4){
+					spriteArray[0].bulletArray.splice(i,1);
+				}
+				else if (spriteArray[0].bulletArray[i].x >= enemyArray[x].x && spriteArray[0].bulletArray[i].y <= enemyArray[x].y + enemyArray[x].height) {
+					if(spriteArray[0].bulletArray[i].x <= enemyArray[x].x + enemyArray[x].width && spriteArray[0].bulletArray[i].y > enemyArray[x].y){
+						if(pixelCollision(enemyArray[x],spriteArray[0].bulletArray[i])){
+							spriteArray[x].bulletArray[i].pop = 1;
+
+							if(enemyArray[x].side === 1 || enemyArray[x].side === 3){
+								enemyArray[x].side = 5;
 							}
-							else if(enemyArray[0].side === 2 || enemyArray[0].side === 0){
-								enemyArray[0].side = 4;
+							else if(enemyArray[x].side === 2 || enemyArray[x].side === 0){
+								enemyArray[x].side = 4;
 							}
 						}
 					}
-
-
-
-
 				}
 			}
-		}
 
-		for (var i = 0; i < spriteArray[0].grenadeArray.length; i++) {
-			spriteArray[0].grenadeArray[i].update(anim);
+			for (var i = 0; i < spriteArray[0].grenadeArray.length; i++) {
+				spriteArray[0].grenadeArray[i].update(anim);
 
-			if(spriteArray[0].grenadeArray[i].state == 15){
-				spriteArray[0].grenadeArray.splice(i,1);
-			}
-		}
-
-		if(spriteArray[0].grenadeArray.length >= 100){
-			spriteArray[0].grenadeArray.splice(0,spriteArray[0].grenadeArray.length)
-		}
-
-		if(enemyArray[0].side !== 4 &&  enemyArray[0].side !== 5){
-			for (var i = 0; i < enemyArray.length; i++) {
-				if(spriteArray[0].x <= enemyArray[i].x ){
-					if(distance(spriteArray[0].x,enemyArray[i].x) > 650){
-						enemyArray[i].side = 0;
-					}else{
-						enemyArray[i].side = 2;
-					}
-				}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[i].x + enemyArray[i].width){
-					if(distance(spriteArray[0].x,enemyArray[i].x + enemyArray[i].width) > 650){
-						enemyArray[i].side = 1;
-					}else{
-						enemyArray[i].side = 3;
-					}
+				if(spriteArray[0].grenadeArray[i].state == 15){
+					spriteArray[0].grenadeArray.splice(i,1);
 				}
 			}
+
+			if(spriteArray[0].grenadeArray.length >= 100){
+				spriteArray[0].grenadeArray.splice(0,spriteArray[0].grenadeArray.length)
+			}
+
+			if(enemyArray[x].side !== 4 &&  enemyArray[x].side !== 5){
+					if(spriteArray[0].x <= enemyArray[x].x ){
+						if(distance(spriteArray[0].x,enemyArray[x].x) > 650){
+							enemyArray[x].side = 0;
+						}else{
+							enemyArray[x].side = 2;
+						}
+					}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[x].x + enemyArray[x].width){
+						if(distance(spriteArray[0].x,enemyArray[x].x + enemyArray[x].width) > 650){
+							enemyArray[x].side = 1;
+						}else{
+							enemyArray[x].side = 3;
+						}
+					}
+			}
+			else if(enemyArray[x].sd === 5){
+				k.innerHTML = String(spriteArray[0].kills);
+				enemyArray.splice(x,1);
+				spriteArray[0].kills++;
+
+					var a = Math.floor(Math.random() * iw-105)+1;
+					var enemy = new Image();
+					enemy.src = "RESOURCES/soldierRest1.png";
+					var en = new NPC(a,y,145,112,enemy,dx,dy,ctx,canvas);
+					enemyArray.push(en);
+
+			}
 		}
-		else if(enemyArray[0].sd === 5){
-				enemyArray.splice(0,1);
-				var x = Math.floor(Math.random() * iw-105)+1;
-				var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
-				enemyArray.push(en);
-		}
+
 
 
 	}
 	animate();
 
-	canvas.addEventListener("mousemove",function(ev){
-		var x = ev.x;
-		var y = ev.y;
-		x -= canvas.offsetLeft;
-		y -= canvas.offsetTop;
-	});
+
 }
 
 
-function windowChangerHandeler(ev){
+function windowChangerHandeler(){
 
-	window.open("mainMenu.html");
+	var popup = window.open("mainMenu.html");
 	popup.postMessage("go");
 	console.log("sent");
 	window.href =""
@@ -252,4 +269,69 @@ function distance(x,y){
 
 	return dist;
 
+}
+
+function getDataOfImage(img,x,y,w,h)
+{
+	x = Math.abs(parseInt(x));
+	y = Math.abs(parseInt(y));
+	w = Math.abs(parseInt(w));
+	h = Math.abs(parseInt(h));
+	Math.abs(parseInt(x))
+	if(w==0) w=1;
+	if(h==0) h=1;
+	var c = document.createElement("canvas");
+	c.width = img.width;
+	c.height = img.height;
+	var ct = c.getContext("2d");
+	ct.clearRect(0,0,c.width,c.height);
+	ct.drawImage(img,0,0);
+	var imagedata = ct.getImageData(x,y,w,h);
+	var rgb = imagedata.data;
+	var pixels=new Array(w*h);
+	var i=0;
+	for(var y=0;y<h;y++)
+	{
+		for(var x=0;x<w;x++)
+		{
+			var p=(y*w+x)*4;
+			pixels[i]=(rgb[p+3]<<24)|(rgb[p]<< 16)|(rgb[p+1]<<8)|rgb[p+2];
+			i++;
+		}
+	}
+	return pixels;
+}
+
+function pixelCollision(s1,s2){
+
+		var r = s1.intersection(s2);
+		var pixels1 = getDataOfImage(s1.img,r[0]-s1.x,r[1]-s1.y,r[2],r[3]);
+		var pixels2 = getDataOfImage(s2.img,r[0]-s2.x,r[1]-s2.y,r[2],r[3]);
+		for(var i=0;i<pixels1.length;i++)
+		{
+			if(pixels1[i]!=0 && pixels2[i]!=0)
+			{
+				return true;
+			}
+		}
+
+	return false;
+}
+
+function Timer() {
+  var presentTime = document.getElementById('timer').innerHTML;
+  var timeArray = presentTime.split(/[:]+/);
+  var m = timeArray[0];
+  var s = Segundos((timeArray[1] - 1));
+  if(s==59){m=m-1}
+
+  document.getElementById('timer').innerHTML =
+    m + ":" + s;
+  setTimeout(Timer, 1000);
+}
+
+function Segundos(sec) {
+  if (sec < 10 && sec >= 0) {sec = "0" + sec};
+  if (sec < 0) {sec = "59"};
+  return sec;
 }

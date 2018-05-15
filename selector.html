@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css" />
     <link rel="icon" href="RESOURCES/icon.png">
-    <script type="text/javascript" src="mainPage.js"></script>
+    <script type="text/javascript" src="selector.js"></script>
 		<script type="text/javascript" src="sound.js"></script>
-    <title>MAIN MENU</title>
+    <title>CREDITS</title>
   </head>
   <body>
 		<audio id="aud" src="RESOURCES/M.O.O.N. - Dust.mp3" autoplay="true" loop="true" preload="auto" autobuffer></audio>
     <nav class = "main">
       <div id="background-wrap">
-        <header id="container">
-          <h1>NIRVANA</h1>
-
+        <header id="containerSS">
+          <h1>Choose your character</h1>
         </header>
         <div class="cloud x1"><img  id="cloud"  src="RESOURCES/cloud2.png" width="300px" height="100px"></div>
         <div class="cloud x3"><img  id="cloud"  src="RESOURCES/cloud2.png" width="400px" height="100px"></div>
@@ -24,19 +24,17 @@
         <div class="cloud x4"><img  id="cloud"  src="RESOURCES/cloud.png" width="500px" height="150px"></div>
       </div>
     </nav>
-
-    <nav class="button_container">
-	     <button class="btn" id="play"><span>Play</span></button>
-       <button class="btn" id="loadgame"><span>Load Game</span></button>
-       <button class="btn" id="highscores"><span>HighScores</span></button>
-       <button class="btn" id="options"><span>Options</span></button>
-       <button class="btn" id="credits"><span>Credits</span></button>
-       <button class="btn" id="help"><span>Tutorial</span></button>
-       <button class="btn" id="exit"><span>Exit</span></button>
+		<nav class="chooseChar">
+			<img id="marco" src="RESOURCES/MarcoP.png" alt="Marco" width="200" height="300">
+			<img id="fio" src="RESOURCES/FioP.png" alt="Fio" width="200" height="300">
+			<img id="trevor" src="RESOURCES/TrevorP.png" alt="Trevor" width="200" height="300">
+			<img id="nadia" src="RESOURCES/NadiaP.png" alt="Nadia" width="200" height="300">
+		</nav>
+    <div class="sprites">
+    </div>
+    <nav class="nav1">
+	     <button class="btn" id="back" ><span>Back</span></button>
     </nav>
-
-    <div class="sprites"></div>
-
     <sup>Version 1.2.0.4</sup>
   </body>
 </html>

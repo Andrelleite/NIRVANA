@@ -9,6 +9,8 @@ class Controller{
 		this.shoot = false;
 		this.trow = false; /*trow object*/
 		this.space = false; /*jump sprite*/
+
+		this.exit = 1;
 	}
 
 }

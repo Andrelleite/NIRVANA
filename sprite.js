@@ -23,6 +23,8 @@ const proneact1 = ["RESOURCES/prone1l.png","RESOURCES/prone2l.png","RESOURCES/pr
 
 const pronerest = ["RESOURCES/proneRest1.png","RESOURCES/proneRest2.png","RESOURCES/proneRest3.png","RESOURCES/proneRest4.png","RESOURCES/proneRest5.png","RESOURCES/proneRest6.png"];
 const pronerest1 = ["RESOURCES/proneRest1l.png","RESOURCES/proneRest2l.png","RESOURCES/proneRest3l.png","RESOURCES/proneRest4l.png","RESOURCES/proneRest5l.png","RESOURCES/proneRest6l.png"];
+const proneShoot = ["RESOURCES/proneShoot1.png","RESOURCES/proneShoot2.png","RESOURCES/proneShoot3.png","RESOURCES/proneShoot4.png","RESOURCES/proneShoot5.png"]
+const proneShoot1 = ["RESOURCES/proneShoot1l.png","RESOURCES/proneShoot2l.png","RESOURCES/proneShoot3l.png","RESOURCES/proneShoot4l.png","RESOURCES/proneShoot5l.png"]
 
 class Sprite{
 
@@ -54,15 +56,18 @@ class Sprite{
 		this.s = 0;
 		this.sd = 0;
 		this.ps = 0;
+		this.cs = 0;
+		this.csr = 0;
+		this.d = 0;
 		this.grenadeAmmo = 6;
 		this.lives = 6;
 		this.state = 1;
-
-		var newCan = document.createElement("canvas");
-		this.newCtx = newCan.getContext("2d");
+		this.kills = 1;
+		this.newCan = document.createElement("canvas");
+		this.newCtx = this.newCan.getContext("2d");
 		this.newCtx.drawImage(this.img, 0,0,this.width,this.height);
 		this.imgData =this.newCtx.getImageData(0,0,this.width,this.height).data;
-
+		this.mapstance = 1;
   }
 
   draw(ctx){
@@ -77,55 +82,45 @@ class Sprite{
 
 				if(this.state){
 
-					if(this.facinghorizontal && !controller.space && !controller.up && !controller.right && !controller.left && !controller.shoot && !this.prone){
+
+
+					if(this.facinghorizontal && !controller.space && !controller.up && !controller.right && !controller.left && !controller.shoot && !controller.down){
 						this.restleft(time);
 					}
-					else if(this.facinghorizontal === false && !controller.space && !controller.up && !controller.right && !controller.left && !controller.shoot && !this.prone){
+					else if(this.facinghorizontal === false && !controller.space && !controller.up && !controller.right && !controller.left && !controller.shoot && !controller.down){
 						this.rest(time);
 					}
 
-					if (controller.space && this.jumping == false && !this.prone) {
+					if (controller.space && this.jumping == false && !controller.down) {
 
-				  	this.dy -= 40;
-				  	this.jumping = true;
+
 						if(this.facinghorizontal){
 							this.img.src = run2[1];
 						}else {
 							this.img.src = run1[1];
 						}
+						this.dy -= 40;
+				  	this.jumping = true;
 
-
-						if (controller.shoot){
-							this.shootanim(time);
+						if (controller.shoot && !controller.down){
 
 							if(this.shootTimer < time){
 								this.shootTimer = time + this.gunRepeat;
 								if(this.facingup){
 									this.shoot(this.ctx,this.x+this.width/2,this.y-this.heightJam/2,0,-20);
 								}
-
 								else if(this.facinghorizontal){
-									if(this.prone){
+										this.shootanim(time);
 										this.shoot(this.ctx,this.x-20,this.y,-20,0);
-									}else{
-										this.shoot(this.ctx,this.x-20,this.y,-20,0);
-									}
-
 								}
-
 								else if(this.facinghorizontal == false){
-									if(this.prone){
+										this.shootanim(time);
 										this.shoot(this.ctx,this.x+this.width+20,this.y,20,0);
-									}else{
-										this.shoot(this.ctx,this.x+this.width+20,this.y,20,0);
-									}
 								}
-
 							}
-
 						}
+					}
 
-				  }
 
 				  if (controller.up) {
 						this.facingup = true;
@@ -152,32 +147,44 @@ class Sprite{
 				  }
 
 					if(controller.down){
-						this.gunRepeat = machineVel;
-						if(controller.right && this.facinghorizontal === false){
+						if(controller.right && this.facinghorizontal === false && !controller.shoot){
 							this.crawl(time);
 							this.dx -= 3;
-						}else if(!controller.right && this.facinghorizontal === false){
+						}else if(!controller.right && this.facinghorizontal === false && !controller.shoot){
 							this.proneRest(time);
-						}else if(!controller.left && this.facinghorizontal){
+						}else if(!controller.left && this.facinghorizontal && !controller.shoot ){
 							this.proneRest1(time);
-						}else if(controller.left && this.facinghorizontal){
+						}else if(controller.left && this.facinghorizontal && !controller.shoot){
 							this.crawl1(time);
 							this.dx += 3;
+						}else if(controller.shoot && !this.facinghorizontal){
+							this.dx = 0;
+							this.proneShootAct(time);
+							if(this.shootTimer < time){
+								this.shootTimer = time + this.gunRepeat;
+								this.shoot(this.ctx,this.x+this.width,this.y+this.height/2-10,20,0);
+							}
+						}else if(controller.shoot && this.facinghorizontal){
+							this.dx = 0;
+							this.proneShootAct1(time);
+							if(this.shootTimer < time){
+								this.shootTimer = time + this.gunRepeat;
+								this.shoot(this.ctx,this.x,this.y+this.height/2-10,-20,0);
+							}
 						}
-
 						this.prone = true;
 					}
 					else{
 						this.prone = false;
 						this.gunRepeat = pistolVel;
-
+						this.width = 92;
 					}
 
 					if(!controller.shoot){
 						this.width = this.basew;
 					}
 
-					if (controller.shoot){
+					if (controller.shoot && !controller.down){
 						this.shootanim(time);
 
 						if(this.shootTimer < time){
@@ -241,15 +248,21 @@ class Sprite{
 						}
 				  }
 
-				  if (this.x + this.width < 0) {
+				  if (this.x + this.width < 0 && this.mapstance > 1) {
 
 				    this.x = this.canvas.scrollWidth;
+						this.mapstance--;
+						this.dy = 0;
 
 				  }
-					else if (this.x > this.canvas.scrollWidth) {
+					else if (this.x > this.canvas.scrollWidth && this.mapstance < 3) {
+						this.mapstance++;
+				    this.x = 1;
+						this.dy = 0;
 
-				    this.x = 0;
 					}
+
+					this.canvas.style.backgroundImage = "url('RESOURCES/map1"+String(this.mapstance)+".png')";
 
 				}
 
@@ -263,7 +276,6 @@ class Sprite{
 
 	}
 
-
 	shoot(ctx,x,y,dx,dy,frame){
 		var bullet;
 		var bul = new Image();
@@ -271,6 +283,24 @@ class Sprite{
 		bullet = new Bullet(bul,x,y,dx,dy,ctx,this.canvas);
 		this.bulletArray.push(bullet);
 
+	}
+
+	proneShootAct(frame){
+		this.width = 120;
+		var x = frame % 6;
+		if(x === 2){
+			this.sw++;
+			this.img.src = proneShoot[this.sw % 5];
+		}
+	}
+
+	proneShootAct1(frame){
+		this.width = 120;
+		var x = frame % 6;
+		if(x === 2){
+			this.sw++;
+			this.img.src = proneShoot1[this.sw % 5];
+		}
 	}
 
 	trow(ctx,x,y,dx,dy,side){
@@ -318,7 +348,7 @@ class Sprite{
 	}
 
 	shootanim(frame){
-		var x = frame % 7;
+		var x = frame % 12;
 		if(x === 5 && !this.facinghorizontal){
 			this.img.src = shoot1[0];
 			this.width = this.shootingw;
@@ -331,8 +361,8 @@ class Sprite{
 	die(frame){
 			var x = frame % 7;
 			if(x === 3){
-				this.img.src = marcodie[this.sd % 9];
-				this.sd++;
+				this.img.src = marcodie[this.d % 9];
+				this.d++;
 			}
 	}
 
@@ -340,97 +370,43 @@ class Sprite{
 
 		var x = frame % 13;
 		if(x === 3){
-			this.img.src = proneact[this.sd % 10];
-			this.sd++;
+			this.img.src = proneact[this.cs % 10];
+			this.cs++;
 		}
 	}
 
 	proneRest(frame){
 		var x = frame % 13;
 		if(x === 3){
-			this.img.src = pronerest[this.sd %6];
-			this.sd++;
+			this.img.src = pronerest[this.csr %6];
+			this.csr++;
 		}
 	}
 
 	proneRest1(frame){
 		var x = frame % 13;
 		if(x === 3){
-			this.img.src = pronerest1[this.sd %6];
-			this.sd++;
+			this.img.src = pronerest1[this.csr %6];
+			this.csr++;
 		}
 	}
 
 	crawl1(frame){
 		var x = frame % 13;
 		if(x === 3){
-			this.img.src = proneact1[this.sd % 10];
-			this.sd++;
+			this.img.src = proneact1[this.cs % 10];
+			this.cs++;
 		}
 	}
 
-
-	colisao_sprite(turbo,ctx){
-
-		if(this.x<turbo.x && this.x+this.width>turbo.x && this.y<turbo.y && this.y+this.height>turbo.y){
-			var comprimento=Math.round(Math.min(turbo.width,this.x+this.width-turbo.x));
-			var altura=Math.round(Math.min(turbo.height, this.y+this.height-turbo.y));
-
-			var xxcarro=Math.round(turbo.x-this.x);
-			var yycarro=Math.round(turbo.y-this.y);
-
-			var xx;
-			var yy;
-
-			if(comprimento && altura){
-				for( xx=0; xx<comprimento; xx++){
-					for( yy=0; yy<comprimento; yy++){
-						if( turbo.imgData[yy*turbo.width*4 + xx*4 + 3] && this.imgData[(yycarro+yy)*this.width*4  + (xxcarro+xx)*4 + 3] )
-							return true;
-					}
-				}
-			}
-
-		}
-		if(this.x<turbo.x && this.x+this.width>turbo.x && this.y<turbo.y+turbo.height && this.y+this.height>turbo.y+turbo.height){
-			var comprimento=Math.round(Math.min(turbo.width,this.x+this.width-turbo.x));
-			var altura=Math.round(Math.min(turbo.height, turbo.y+turbo.height-this.y ));
-
-			var xxcarro=Math.round(turbo.x-this.x);
-			var yycarro=Math.round(turbo.y+turbo.height-this.y);
-
-			var xxturbo=Math.round(turbo.x);
-			var yyturbo=Math.round(turbo.y+turbo.height-altura);
-
-			var xx;
-			var yy;
-
-			if(comprimento && altura){
-				for( xx=0; xx<comprimento; xx++){
-					for( yy=0; yy<comprimento; yy++){
-						if( turbo.imgData[(yyturbo+yy)*turbo.width*4 + (xxturbo+xx)*4 + 3] && this.imgData[(yycarro+yy)*this.width*4  + (xxcarro+xx)*4 + 3] ){
-							return true;
-						}
-
-					}
-				}
-			}
-
-		}
-
-		return false;
+	intersection(r)
+	{
+			var x,y,w,h;
+			x = Math.max(this.x,r.x);
+			y = Math.max(this.y,r.y);
+			w = Math.min(this.x+this.width,r.width+r.height)-x;
+			h = Math.min(this.y+this.height,r.y+r.height)-y;
+			return [x,y,w,h];
 	}
-
-	colisao(turbo){
-		if( !(this.x > turbo.x + turbo.width) &&
-			!(this.x+this.width < turbo.x)  &&
-			!(this.y > turbo.y + turbo.height) &&
-			!(this.y + this.height < turbo.y  )
-		)
-			return true;
-		return false;
-
-	}
-
 
 }

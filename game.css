@@ -7,18 +7,29 @@ body{
 }
  canvas{
 
-	 border: 3px solid #fff;
    display: block;
-	 top: 140px;
+	 top: 200px;
 	 left: 440px;
-   background: url("RESOURCES/MS4Mission1.png") no-repeat;
+   background: url("RESOURCES/map11.png") no-repeat;
    background-size: cover;
    position: absolute;
 
  }
 
-.nav1{
+nav{
+	margin: auto;
+  display: block;
+  position: absolute;
+	left: 100px;
+	top: 200px;
+}
 
+.xx{
+	font-size: 100px;
+	color: rgb(22,154,98);
+}
 
-
+#timer{
+	font-size: 100px;
+	color: rgb(22,154,98);
 }

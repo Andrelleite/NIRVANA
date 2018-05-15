@@ -23,7 +23,7 @@ class Grenade{
 		this.ny = this.y-105;
 		this.state = 0;
 		this.side = side; /*0 -> left | 1 -> right*/
-		
+
 	}
 
 	goGrenade(){

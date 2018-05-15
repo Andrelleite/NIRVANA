@@ -8,8 +8,18 @@
 
 function update()
 {
+		var aValue = sessionStorage.getItem("Time");
 		var myAudio= document.getElementById("aud");
-		myAudio.play();
-		myAudio.currentTime = 100;
+		var vol = sessionStorage.getItem("Volume");
 
+		if(vol == -1){
+			myAudio.pause();
+			console.log("paused");
+
+		}else{
+			console.log("playing");
+
+			myAudio.currentTime = aValue;
+			myAudio.play();
+		}
 }

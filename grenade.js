@@ -23,7 +23,7 @@ class Grenade{
 		this.ny = this.y-105;
 		this.state = 0;
 		this.side = side; /*0 -> left | 1 -> right*/
-
+		this.canKill = 0;
 	}
 
 	goGrenade(){
@@ -52,11 +52,11 @@ class Grenade{
 			this.y += this.dy;
 
 			if(Math.floor(this.y+this.dy) >= this.floor-width){
-				this.dy = -this.dy * 0.4;
+				this.dy = -this.dy * 0.5;
 			}else{
 				this.dy++;
 			}
-			this.dx = this.dx*0.97;
+			this.dx = this.dx*0.98;
 		}
 
 		this.goGrenade();
@@ -73,6 +73,9 @@ class Grenade{
 			console.log(this.state);
 		}else if(this.state === 0){
 			this.img.src = explodeSprite[this.state];
+		}
+		if(this.state % 15 == 7){
+			this.canKill = 1;
 		}
 
 	}

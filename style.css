@@ -87,6 +87,70 @@ body{
 	margin-top: 18%;
 }
 
+.slidecontainerV{
+	margin-top: 40%;
+	margin-left: 42%;
+
+}
+
+ .slidecontainerF{
+	 margin-top: 63%;
+	 margin-left:65%;
+ }
+
+#myRangeV,#myRangeF{
+	width: 250px;
+	height: 15px;
+	border-radius: 5px;
+
+}
+
+#myRangeV::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #44C19A;
+    cursor: pointer;
+}
+
+#myRangeV::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #44C19A;
+    cursor: pointer;
+}
+
+#myRangeF::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #44C19A;
+    cursor: pointer;
+}
+
+#myRangeF::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #44C19A;
+    cursor: pointer;
+}
+
+#rangeval{
+	font-size: 20px;
+	position: absolute;
+	margin-top: 12%;
+	margin-left: 0%;
+}
+
+#rangevalf{
+	font-size: 20px;
+	position: absolute;
+	margin-top: 1%;
+	margin-left: 90%;
+}
+
 #modalEvent{
 	font-size: 20px;
 	margin-left: 45%;
@@ -105,7 +169,7 @@ body{
 
 #FX{
 	font-size: 45px;
-	width: 200px;
+	width: 300px;
 	margin: auto;
   display: block;
   position: absolute;

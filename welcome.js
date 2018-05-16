@@ -29,7 +29,10 @@ function main() {
 	var myAudio = document.getElementById("aud");
 	var btnNext = document.getElementById("next");
 	sessionStorage.setItem('SoundOn', 1);
-	sessionStorage.setItem("Volume",1);
+	sessionStorage.setItem("Volume",0.5);
+	sessionStorage.setItem("muted",1);
+	sessionStorage.setItem("Volumefx",0.5);
+	sessionStorage.setItem("mutedfx",1);
 
 	btnNext.addEventListener("click",function(){
 		sessionStorage.setItem("Time",myAudio.currentTime);

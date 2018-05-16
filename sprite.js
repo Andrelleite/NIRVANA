@@ -28,7 +28,8 @@ const proneShoot1 = ["RESOURCES/proneShoot1l.png","RESOURCES/proneShoot2l.png","
 
 class Sprite{
 
-  constructor(x,y,nw,nh,img,speedx,speedy,ctx,canvas,jump){
+  constructor(x,y,nw,nh,img,speedx,speedy,ctx,canvas,jump,soundBoard){
+		this.lvl = 1;
     this.x = x-nw;
     this.y = y;
 		this.shootingw = nw+50;
@@ -68,6 +69,7 @@ class Sprite{
 		this.newCtx.drawImage(this.img, 0,0,this.width,this.height);
 		this.imgData =this.newCtx.getImageData(0,0,this.width,this.height).data;
 		this.mapstance = 1;
+		this.audio = soundBoard;
   }
 
   draw(ctx){
@@ -262,7 +264,7 @@ class Sprite{
 
 					}
 
-					this.canvas.style.backgroundImage = "url('RESOURCES/map1"+String(this.mapstance)+".png')";
+					this.canvas.style.backgroundImage = "url('RESOURCES/map"+String(this.lvl)+""+String(this.mapstance)+".png')";
 
 				}
 
@@ -354,6 +356,9 @@ class Sprite{
 			this.sw++;
 			this.img.src = run1[this.sw % 3];
 		}
+		if(this.sw % 3 === 2){
+			this.audio.SpriteWalk();
+		}
 	}
 
 	runleft(frame){
@@ -361,6 +366,10 @@ class Sprite{
 		if(x === 5){
 			this.sw++;
 			this.img.src = run2[this.sw % 3];
+		}
+		if(this.sw % 3 === 2){
+			this.audio.SpriteWalk();
+
 		}
 	}
 
@@ -390,6 +399,10 @@ class Sprite{
 			this.img.src = proneact[this.cs % 10];
 			this.cs++;
 		}
+
+		if(this.cs % 10 === 5 || this.cs % 10 === 9 ){
+			this.audio.SpriteWalk();
+		}
 	}
 
 	proneRest(frame){
@@ -414,10 +427,12 @@ class Sprite{
 			this.img.src = proneact1[this.cs % 10];
 			this.cs++;
 		}
+		if(this.cs % 10 === 5 || this.cs % 10 === 9 ){
+			this.audio.SpriteWalk();
+		}
 	}
 
-	intersection(r)
-	{
+	intersection(r){
 			var x,y,w,h;
 			x = Math.max(this.x,r.x);
 			y = Math.max(this.y,r.y);
@@ -425,5 +440,6 @@ class Sprite{
 			h = Math.min(this.y+this.height,r.y+r.height)-y;
 			return [x,y,w,h];
 	}
+
 
 }

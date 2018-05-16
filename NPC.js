@@ -15,10 +15,12 @@ const die= ["RESOURCES/soldierdie1.png","RESOURCES/soldierdie2.png","RESOURCES/s
 const die1= ["RESOURCES/soldierdie1l.png","RESOURCES/soldierdie2l.png","RESOURCES/soldierdie3l.png","RESOURCES/soldierdie4l.png","RESOURCES/soldierdie4l.png"];
 const bullet2 = ["RESOURCES/bullet.png","RESOURCES/ball1.png"];
 
+
+
 class NPC{
 
 
-	constructor(tipo,x,y,nw,nh,img,speedx,speedy,ctx,canvas){
+	constructor(tipo,x,y,nw,nh,img,speedx,speedy,ctx,canvas,soundBoard){
 
 		this.x = x;
 		this.y = y;
@@ -37,11 +39,12 @@ class NPC{
 		this.side = 2;
 		this.bullets = [];
 		this.tipo = tipo;
+		this.audio = soundBoard;
+
 		var newCan = document.createElement("canvas");
 		this.newCtx = newCan.getContext("2d");
 		this.newCtx.drawImage(this.img, 0,0,this.width,this.height);
 		this.imgData =this.newCtx.getImageData(0,0,this.width,this.height).data;
-
 	}
 
 	draw(ctx){
@@ -142,6 +145,7 @@ class NPC{
 				this.img.src = shootenemy[this.sh % 8];
 				if(this.sh % 8 === 2){
 					this.goBullet(this.ctx,this.x,this.y+12,-20,0,30,20,1);
+					this.audio.SoldierShoot();
 				}
 			}
 		}else{
@@ -152,6 +156,7 @@ class NPC{
 				this.img.src = enemyRoll[this.rb % 10];
 				if(this.rb % 10 === 8){
 					this.goBullet(this.ctx,this.x+this.width/2,this.y+this.height/2,-2,2,35,35,0);
+
 				}
 			}
 		}
@@ -166,6 +171,8 @@ class NPC{
 				this.img.src = shootenemy1[this.sh % 8];
 				if(this.sh % 8 === 1){
 					this.goBullet(this.ctx,this.x+this.width,this.y+12,20,0,30,20,1);
+					this.audio.SoldierShoot();
+
 				}
 			}
 		}else{

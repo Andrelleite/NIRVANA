@@ -33,7 +33,7 @@ function init(){
 
 	var spriteArray = [];
 	var enemyArray = [];
-
+	var enemybullets = [];
 	var img = new Image();
 	img.src = "RESOURCES/rested1.png";
 
@@ -47,21 +47,26 @@ function init(){
 	var novo = new Sprite(x,y,92,110,img,dx,dy,ctx,canvas,true);
 	spriteArray.push(novo);
 
+
+
 	var x = Math.floor(Math.random() * iw-105)+1;
-	var en = new NPC(x,y,145,112,enemy,dx,dy,ctx,canvas);
 	var enemy = new Image();
 	enemy.src = "RESOURCES/soldierRest1.png";
+	var en = new NPC(0,x,y,145,112,enemy,dx,dy,ctx,canvas);
 	enemyArray.push(en);
-
+	var x = Math.floor(Math.random() * iw-105)+1;
+	var enemy = new Image();
+	enemy.src = "RESOURCES/soldierRest1.png";
+	var en = new NPC(1,x,y,145,112,enemy,dx,dy,ctx,canvas);
+	enemyArray.push(en);
 	document.getElementById('timer').innerHTML = "5:00";
 	Timer();
 
+
  	ctx.font="20px Georgia";
 	var k = document.getElementsByTagName("p")[0];
-	console.log(k);
 
-	function animate(){
-
+	function animate(x){
 		if(control.exit === -1){
 			windowChangerHandeler()
 		}
@@ -135,7 +140,36 @@ function init(){
 
 		});
 
-		for (var x = 0; x < 1; x++) {
+		for (var i = 0; i < spriteArray[0].bulletArray.length; i++) {
+			spriteArray[0].bulletArray[i].update(anim);
+			if(spriteArray[0].bulletArray[i].x >= iw || spriteArray[0].bulletArray[i].y <= 0){
+					spriteArray[0].bulletArray.splice(i,1);
+
+				}
+				if(spriteArray[0].bulletArray[i].p >= 4){
+					spriteArray[0].bulletArray.splice(i,1);
+				}else{
+					for (var x = 0; x < enemyArray.length; x++) {
+						if (spriteArray[0].bulletArray[i].x >= enemyArray[x].x && spriteArray[0].bulletArray[i].y <= enemyArray[x].y + enemyArray[x].height) {
+							if(spriteArray[0].bulletArray[i].x <= enemyArray[x].x + enemyArray[x].width && spriteArray[0].bulletArray[i].y > enemyArray[x].y){
+								if(pixelCollision(spriteArray[0].bulletArray[i],enemyArray[x])){
+									spriteArray[0].bulletArray[i].pop = 1;
+
+									if(enemyArray[x].side === 1 || enemyArray[x].side === 3){
+										enemyArray[x].side = 5;
+									}
+									else if(enemyArray[x].side === 2 || enemyArray[x].side === 0){
+										enemyArray[x].side = 4;
+									}
+								}
+							}
+						}
+					}
+				}
+
+		}
+
+		for (var x = 0; x < 2; x++) {
 			enemyArray[x].update(anim);
 
 
@@ -165,32 +199,6 @@ function init(){
 				var a = Math.floor(Math.random() * iw-105)+1;
 				var novo = new Sprite(a,y,92,110,img,dx,dy,ctx,canvas,true);
 				spriteArray.push(novo);
-			}
-
-			for (var i = 0; i < spriteArray[0].bulletArray.length; i++) {
-				spriteArray[0].bulletArray[i].update(anim);
-
-				if(spriteArray[0].bulletArray[i].x >= iw || spriteArray[0].bulletArray[i].y <= 0){
-					spriteArray[0].bulletArray.splice(i,1);
-
-				}
-				if(spriteArray[0].bulletArray[i].p >= 4){
-					spriteArray[0].bulletArray.splice(i,1);
-				}
-				else if (spriteArray[0].bulletArray[i].x >= enemyArray[x].x && spriteArray[0].bulletArray[i].y <= enemyArray[x].y + enemyArray[x].height) {
-					if(spriteArray[0].bulletArray[i].x <= enemyArray[x].x + enemyArray[x].width && spriteArray[0].bulletArray[i].y > enemyArray[x].y){
-						if(pixelCollision(enemyArray[x],spriteArray[0].bulletArray[i])){
-							spriteArray[x].bulletArray[i].pop = 1;
-
-							if(enemyArray[x].side === 1 || enemyArray[x].side === 3){
-								enemyArray[x].side = 5;
-							}
-							else if(enemyArray[x].side === 2 || enemyArray[x].side === 0){
-								enemyArray[x].side = 4;
-							}
-						}
-					}
-				}
 			}
 
 			for (var i = 0; i < spriteArray[0].grenadeArray.length; i++) {
@@ -223,13 +231,20 @@ function init(){
 			else if(enemyArray[x].sd === 5){
 				k.innerHTML = String(spriteArray[0].kills);
 				enemyArray.splice(x,1);
+				var t = Math.floor(Math.random() * 1);
 				spriteArray[0].kills++;
 
-					var a = Math.floor(Math.random() * iw-105)+1;
-					var enemy = new Image();
-					enemy.src = "RESOURCES/soldierRest1.png";
-					var en = new NPC(a,y,145,112,enemy,dx,dy,ctx,canvas);
-					enemyArray.push(en);
+				var t = Math.random();
+				if(t > 0.5){
+					t = 1;
+				}else {
+					t = 0;
+				}
+				var x = Math.floor(Math.random() * iw-105)+1;
+				var enemy = new Image();
+				enemy.src = "RESOURCES/soldierRest1.png";
+				var en = new NPC(t,x,y,145,112,enemy,dx,dy,ctx,canvas);
+				enemyArray.push(en);
 
 			}
 		}

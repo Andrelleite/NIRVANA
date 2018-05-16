@@ -13,15 +13,13 @@
 
   </head>
   <body>
-		<audio id="aud" src="RESOURCES/M.O.O.N. - Dust.mp3" loop="true" preload="auto" autobuffer></audio>
-
+		<audio id="aud" src="RESOURCES/M.O.O.N. - Dust.mp3" autoplay="true" loop="true" preload="auto" autobuffer></audio>
 		<header>
     </header>
     <nav class = "main">
       <div id="background-wrap">
         <header id="container">
           <h1>NIRVANA</h1>
-
         </header>
         <div class="cloud x1"><img  id="cloud"  src="RESOURCES/cloud2.png" width="300px" height="100px"></div>
         <div class="cloud x3"><img  id="cloud"  src="RESOURCES/cloud2.png" width="400px" height="100px"></div>
@@ -29,8 +27,16 @@
         <div class="cloud x4"><img  id="cloud"  src="RESOURCES/cloud.png" width="500px" height="150px"></div>
       </div>
     </nav>
+		<div id="myModal" class="modal">
+  		<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<p>Press F11 key on your keyboard for better game experience</p>
+  		</div>
+		</div>
     <nav class="nav1">
 	     <button class="btn" id="next" ><span>Enter</span></button>
+			 <span  id="modalEvent">Click me!</span>
+
     </nav>
     <sup>Version 1.3.8.2</sup>
   </body>

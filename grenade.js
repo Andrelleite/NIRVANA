@@ -66,7 +66,7 @@ class Grenade{
 
 	explode(frame){
 
-		var x = frame % 2;
+		var x = frame % 4;
 		if(x === 1){
 			this.img.src = explodeSprite[this.state % 15];
 			this.state++;

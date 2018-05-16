@@ -1,23 +1,28 @@
-const w = 20;
-const h = 20;
 
 const popup1 = ["RESOURCES/blood1.png","RESOURCES/blood2.png","RESOURCES/blood3.png","RESOURCES/blood4.png"];
+const ballAct = ["RESOURCES/ball1.png","RESOURCES/ball2.png","RESOURCES/ball3.png","RESOURCES/ball4.png"]
+
 
 class Bullet{
 
-	constructor(img,x,y,dx,dy,ctx,canvas){
+	constructor(img,x,y,dx,dy,ctx,canvas,h,w,hj,type){
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
 		this.ctx = ctx;
+		this.canvas = canvas;
 		this.img = img;
+		this.heightJam = hj;
 		this.time = 0;
 		this.height = h;
 		this.width = w;
 		this.hy = this.y -35;
 		this.pop  = 0;
 		this.p = 0;
+		this.st = 0;
+		this.type = type;
+
 		var newCan = document.createElement("canvas");
 		this.newCtx = newCan.getContext("2d");
 		this.newCtx.drawImage(this.img, 0,0,this.width,this.height);
@@ -35,12 +40,21 @@ class Bullet{
 			this.x += this.dx*0.7;
 			this.y += this.dy*0.8;
 		}else{
+			this.x += 0;
 			this.y = this.hy;
 			this.width = this.height = 70;
-			this.x += 0;
 			this.hit(time);
+
 		}
 
+		if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
+				this.y = this.canvas.scrollHeight-(4*this.height)-8;
+				this.dy = 0;
+		}
+
+		if(this.type === 0){
+			this.rollBall(time);
+		}
 
 		this.goBullet(this.ctx);
 	}
@@ -61,6 +75,15 @@ class Bullet{
 		if(x === 1){
 			this.img.src = popup1[this.p % 4];
 			this.p++;
+		}
+	}
+
+
+	rollBall(frame){
+		var x = frame % 6;
+		if(x === 1){
+			this.img.src = ballAct[this.st % 4];
+			this.st++;
 		}
 	}
 

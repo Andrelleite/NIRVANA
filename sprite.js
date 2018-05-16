@@ -219,10 +219,10 @@ class Sprite{
 							this.trowTimer = time + 10;
 							if(this.facinghorizontal){
 								this.grenadeAmmo--;
-								this.trow(this.ctx,this.x+this.height/2-10,this.y+this.height/3,-14,17,0);
+								this.trow(this.ctx,this.x+this.height/2-10,this.y+this.height/3,-10,17,0);
 							}else{
 								this.grenadeAmmo--;
-								this.trow(this.ctx,this.x+this.width/2+10,this.y+this.height/3,14,17,1);
+								this.trow(this.ctx,this.x+this.width/2+10,this.y+this.height/3,10,17,1);
 							}
 						}
 					}
@@ -297,7 +297,7 @@ class Sprite{
 		var bullet;
 		var bul = new Image();
 		bul.src = bullet1[0];
-		bullet = new Bullet(bul,x,y,dx,dy,ctx,this.canvas);
+		bullet = new Bullet(bul,x,y,dx,dy,ctx,this.canvas,20,30,1);
 		this.bulletArray.push(bullet);
 
 	}

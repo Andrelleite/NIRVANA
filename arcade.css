@@ -7,6 +7,7 @@ html{
   user-select: none;
   font-family:"Press Start 2P";
 }
+
 body{
 
 	background-color: black;
@@ -16,15 +17,25 @@ body{
  canvas{
 
    display: block;
-	 top: 200px;
+	 top: 180px;
 	 left: 440px;
-   background: url("RESOURCES/map11.png") no-repeat;
+   background: url("RESOURCES/arcade.png") no-repeat;
    background-size: cover;
    position: absolute;
 
  }
 
-.nav2{
+ .xx{
+ 	font-size: 50px;
+ 	color: rgb(22,154,98);
+ }
+
+ .xl{
+ 	font-size: 50px;
+ 	color: rgb(22,154,98);
+ }
+
+nav{
 	margin: auto;
   display: block;
   position: absolute;
@@ -32,13 +43,7 @@ body{
 	top: 200px;
 }
 
-
 .xx{
-	font-size: 50px;
-	color: rgb(22,154,98);
-}
-
-.xl{
 	font-size: 50px;
 	color: rgb(22,154,98);
 }

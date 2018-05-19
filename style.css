@@ -17,7 +17,7 @@ canvas{
   bottom: 0;
   left: 45%;
   right: 0;
-  background: url("RESOURCES/MS4Mission1.png") no-repeat;
+  background: url("../RESOURCES/MS4Mission1.png") no-repeat;
   background-size: cover;
   position: absolute;
 }
@@ -26,11 +26,56 @@ body{
 
 
   display: block;
-  background: url("RESOURCES/Imagem1.png") no-repeat;
+  background: url("../NIRVANA/RESOURCES/Imagem1.png") no-repeat;
   background-size: 100vw 100vh;
   height: auto;
   overflow: hidden;
 
+}
+
+.imagens{
+
+	width: 100vw;
+	height: 100vh;
+	margin-left: 55%;
+	margin-top: 15%;
+}
+
+#obs1{
+	margin-top: 140px;
+	position: absolute;
+}
+
+#obs2{
+	position:absolute;
+	margin-top:120px;
+	margin-left: 230px;
+}
+
+#obs3{
+	position:absolute;
+	margin-top: 60px;
+	margin-left: 480px;
+}
+
+#obsTitle{
+	font-size: 25px;
+}
+
+#wrapperX1{
+	margin-left: 40%;
+	margin-top: 20%;
+}
+
+#loadGameTitle{
+	font-size: 25px;
+}
+
+.scoreboard{
+	width: 1000px;
+	height: 1000px;
+	margin-left: 40%;
+	margin-top: 13%;
 }
 
 .modal {

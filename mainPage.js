@@ -17,6 +17,15 @@ function main() {
     var btnHelp = document.getElementById("help");
 		var btnops = document.getElementById("options");
 		var btnPlay = document.getElementById("play");
+		var scores = document.getElementById("highscores");
+		var nextUpdate = document.getElementById("update");
+
+		console.log(sessionStorage.getItem("player"));
+
+
+		//----------------------------------------------------------------------------------------
+		//--- page management
+		//----------------------------------------------------------------------------------------
 
 
     btnExit.addEventListener("click",function(){
@@ -47,7 +56,16 @@ function main() {
 			sessionStorage.setItem("Time",myAudio.currentTime);
 			window.open("selector.html");
 
-		})
+		});
+		scores.addEventListener("click",function(){
+			sessionStorage.setItem("Time",myAudio.currentTime);
+			window.open("highscores.html");
+
+		});
+		nextUpdate.addEventListener("click",function(){
+			sessionStorage.setItem("Time",myAudio.currentTime);
+			window.open("nextupdate.html");
+		});
 
     function receiveMessage(event)
     {

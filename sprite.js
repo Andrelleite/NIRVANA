@@ -1,11 +1,10 @@
-const bw = 20;
-const bh = 20;
-
+const bw = 20; /* basic width*/
+const bh = 20; /* baseic height*/
 const pistolVel = 30;
 const grenadeVel = 15;
 const machineVel = 10;
 const shotgunVel = 30;
-
+const nYgap = 450;
 const bullet1 = ["RESOURCES/bullet.png"]
 const spriteSheet =["RESOURCES/marcoChar.png","RESOURCES/marcoCharl.png"];
 const rested1 = ["RESOURCES/rested1.png","RESOURCES/rested2.png","RESOURCES/rested3.png","RESOURCES/rested2.png"];
@@ -41,7 +40,7 @@ class Sprite{
     this.dx = speedx;
 		this.dy = speedy;
     this.ctx = ctx;
-		this.ny = 450;
+		this.ny = nYgap;
 		this.canvas = canvas;
 		this.jumping = jump;
 		this.prone = false;
@@ -53,13 +52,13 @@ class Sprite{
 		this.trowTimer = 0;
 		this.gunRepeat = pistolVel;
 		this.img = img;
-		this.sw = 1;
-		this.s = 0;
-		this.sd = 0;
-		this.ps = 0;
-		this.cs = 0;
-		this.csr = 0;
-		this.d = 0;
+		this.sw = 1; /* proneshoot animator increment*/
+		this.s = 0; /* state variable*/
+		this.sd = 0; /* state variable*/
+		this.ps = 0; /* state variable*/
+		this.cs = 0; /* crawl animator increment */
+		this.csr = 0; /* pronerest increment*/
+		this.d = 0; /* die animator increment*/
 		this.grenadeAmmo = 6;
 		this.lives = 6;
 		this.state = 1;
@@ -70,6 +69,8 @@ class Sprite{
 		this.imgData =this.newCtx.getImageData(0,0,this.width,this.height).data;
 		this.mapstance = 1;
 		this.audio = soundBoard;
+		this.walkspeed = 4;
+		this.nem = 3; /* enemy number in stance */
   }
 
   draw(ctx){
@@ -134,14 +135,14 @@ class Sprite{
 
 					if (controller.left) {
 						this.facinghorizontal = true;
-				    this.dx -= 4;
+				    this.dx -= this.walkspeed;
 						if(!this.prone){
 							this.runleft(time);
 						}
 				  }
 					else if (controller.right) {
 						this.facinghorizontal = false;
-				    this.dx += 4;
+				    this.dx += this.walkspeed;
 						if(!this.prone){
 							this.run(time);
 						}
@@ -216,15 +217,16 @@ class Sprite{
 
 					}
 
-					if(controller.trow && this.grenadeAmmo > 0){
+					if(controller.trow && this.grenadeAmmo > 0 && !controller.down){
+						console.log("trow");
 						if(this.trowTimer < time){
-							this.trowTimer = time + 10;
+							this.trowTimer = time + 30;
 							if(this.facinghorizontal){
 								this.grenadeAmmo--;
-								this.trow(this.ctx,this.x+this.height/2-10,this.y+this.height/3,-10,17,0);
+								this.trow(this.ctx,this.x+this.height/2-10,this.y+this.height/3,-35,40,0);
 							}else{
 								this.grenadeAmmo--;
-								this.trow(this.ctx,this.x+this.width/2+10,this.y+this.height/3,10,17,1);
+								this.trow(this.ctx,this.x+this.width/2+10,this.y+this.height/3,35,40,1);
 							}
 						}
 					}
@@ -250,31 +252,15 @@ class Sprite{
 						}
 				  }
 
-				  if (this.x + this.width < 0 && this.mapstance > 1) {
-
-				    this.x = this.canvas.scrollWidth;
-						this.mapstance--;
-						this.dy = 0;
-
-				  }
-					else if (this.x > this.canvas.scrollWidth && this.mapstance < 3) {
-						this.mapstance++;
-				    this.x = 1;
-						this.dy = 0;
-
-					}
-
-					this.canvas.style.backgroundImage = "url('RESOURCES/map"+String(this.lvl)+""+String(this.mapstance)+".png')";
-
 				}
 
 				else{
-					this.width = 120;
-					this.dy += 2;
+					this.width = 120; /* width proportion*/
+					this.dy += 2; /* velocity increase*/
 				  this.x += this.dx;
 				  this.y += this.dy;
-				  this.dx *= 0.2;
-				  this.dy *= 0.87;
+				  this.dx *= 0.2; /* friction x*/
+				  this.dy *= 0.87; /* friction y */
 					this.die(time);
 
 					if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
@@ -441,5 +427,11 @@ class Sprite{
 			return [x,y,w,h];
 	}
 
+	putNemIn(n){
+		this.nem = n;
+	}
 
+	giveIntroDx(x){
+		this.walkspeed = x;
+	}
 }

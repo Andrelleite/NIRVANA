@@ -1,5 +1,9 @@
 "use strict";
 
+//-------------------------------------------------------------
+//--- CHECK LINE 252 OF ARCADE.JS FOR INFORMATION ABOUT FUNCTION
+//-------------------------------------------------------------
+
 
 (function()
 {
@@ -14,10 +18,8 @@ function main() {
   	var btnBack = document.getElementById("back");
 		var onoff = document.getElementById("som");
 		var vol = sessionStorage.getItem("muted");
-
 		var onofffx = document.getElementById("somfx");
 		var volfx = sessionStorage.getItem("mutedfx");
-
 		var barValue = document.getElementById("myRangeV");
 		var bV = document.getElementById("rangeval");
 		var barValueF = document.getElementById("myRangeF");

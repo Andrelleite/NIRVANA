@@ -1,11 +1,17 @@
 "use strict";
 
-const y = 10;
-const dx =  2;
-const dy =  2;
-const path = "RESOURCES/";
-const format = ".png";
+//----------------------------------------------------------------------------------------
+//--- SOME FUNCTIONS IN THIS FILE ARE EQUAL TO ARCADE.JS, TRY FIRST GIVING A LOOK TO IT.
+//----------------------------------------------------------------------------------------
 
+
+const y = 10; /*spawn inicial das sprites inimigas*/
+const dx =  2; /*velocidade movimento no vetor x*/
+const dy =  2; /*velocidade movimento no vetor y*/
+const path = "RESOURCES/"; /*paste de imagens*/
+const format = ".png"; /*formato de imagem*/
+const floor = 430; /*ponto y correspondente ao chao*/
+const spriteCount = 3;
 (function()
 {
 	window.addEventListener("load", main);
@@ -27,18 +33,20 @@ function main() {
 
 function init(){
 
-	document.getElementById('timer').innerHTML = "0:10";
+	var modal = document.getElementById('myModal');
+	var btn = document.getElementById("modalEvent");
+	var span = document.getElementsByClassName("close")[0];
 
-	var soundBoard = new Sound();
-	console.log(soundBoard);
-	var control = new Controller();
+	document.getElementById('timer').innerHTML = "10:00";
+	var mapHandler = new MapHandle(1);
+	var soundBoard = new Sound(); /*objeto com efeitos sonoros*/
+	var control = new Controller(); /* controlador do jogo*/
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
-	var iw = canvas.scrollWidth;
-	var ih = canvas.scrollHeight;
-	var spriteArray = [];
-	var enemyArray = [];
-	var enemybullets = [];
+	var iw = canvas.scrollWidth; /*comprimento da canvas*/
+	var ih = canvas.scrollHeight; /*altura da canvas*/
+	var spriteArray = []; /*array com sprites jogador*/
+	var enemyArray = []; /*array que contem objetos do tipo NPC*/
 
 	var img = new Image();
 	img.src = "RESOURCES/rested1.png";
@@ -46,59 +54,247 @@ function init(){
 	var enemy = new Image();
 	enemy.src = "RESOURCES/soldierRest1.png";
 
-	var x = Math.floor(Math.random() * iw-85)+85;
-
-
-	var novo = new Sprite(x,y,92,110,img,dx,dy,ctx,canvas,true,soundBoard);
+	var novo = new Sprite(0,floor,92,110,img,dx,dy,ctx,canvas,true,soundBoard);
 	spriteArray.push(novo);
 
-	var x = Math.floor(Math.random() * iw-105)+1;
-	var enemy = new Image();
-	enemy.src = "RESOURCES/soldierRest1.png";
-	var en = new NPC(0,x,y,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
-	enemyArray.push(en);
 
-	var x = Math.floor(Math.random() * iw-105)+1;
-	var enemy = new Image();
-	enemy.src = "RESOURCES/soldierRest1.png";
-	var en = new NPC(1,x,y,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
-	enemyArray.push(en);
+	spriteArray[0].putNemIn(3);
 
 	Timer();
 
-	ctx.font="20px Georgia";
-	var k = document.getElementsByTagName("p")[0];
+	var k = document.getElementsByTagName("p")[0]; /*elemento HTML para numero de mortes causadas*/
+	var d = document.getElementsByClassName("xl")[0]; /*elemento HTML para numero de vidas*/
+	d.innerHTML = "Lives: "+String(spriteArray[0].lives); /*inicializar elemento*/
 
+	var paused = 0; /*variavel de estado para animação em caso o menu seja requisitado*/
 
 	//-------------------------------------------------------------
 	//--- controlo de animação, loop de animação
 	//-------------------------------------------------------------
-
 	function animate(){
+		if(paused === 0){
+				var t = document.getElementById('timer').innerHTML
+				var t_check = String(t[0]+""+t[2]+""+t[3]);
+				ctx.clearRect(0,0,iw,ih);
+				var anim = window.requestAnimationFrame(animate);
+				spriteArray[0].update(ctx,iw,ih,control,anim);
 
-		var t = document.getElementById('timer').innerHTML
-		var t_check = String(t[0]+""+t[2]+""+t[3]);
+				/*INTRO SECTION*/
+				if(anim/100 < 1.5){
+					if(spriteArray[0].x <= 60){
+						control.down = true;
+						control.right = true;
+					}else if(spriteArray[0].x > 60){
+						control.down = false;
+						control.right = false;
+						spriteArray[0].giveIntroDx(4);
+					}
+				}else{
+					/*Event listener para entrada de botão*/
+					window.addEventListener("keydown",function(event){
+						keyDownHandle(control,event);
+					});
+					/*Event listener para saida de botão*/
+					window.addEventListener("keyup",function(event) {
+						keyUpHandle(control,event);
+					});
+				}
 
-		ctx.clearRect(0,0,iw,ih);
-		var anim = window.requestAnimationFrame(animate);
-		spriteArray[0].update(ctx,iw,ih,control,anim);
+				if(spriteArray[0].lives === 0){
+					clearTimeout(Timer);
+					localStorage.setItem("players1",document.getElementById('timer').innerHTML);
+					localStorage.setItem("players1kills",spriteArray[0].kills);
 
-		/*Event listener para entrada de botão*/
-		window.addEventListener("keydown",function(event){
-			keyDownHandle(control,event);
-		});
-		/*Event listener para saida de botão*/
-		window.addEventListener("keyup",function(event) {
-			keyUpHandle(control,event);
-		});
+					window.cancelAnimationFrame(anim);
+					window.open("congratz.html");
+				}
 
-		[spriteArray,enemyArray] = spriteHitCheck(enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k);
-		[spriteArray,enemyArray] = coreAnimator(enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k);
+				/*controlo de animacao e jogabilidade*/
+				enemyArray = mapSet(mapHandler,enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k);
+				[spriteArray,enemyArray] = spriteHitCheck(enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k);
 
-		if(t_check === "000"){
-			window.cancelAnimationFrame(anim);
-			wait(control);
-		}
+				/*Map stance sprite creator */
+				if(spriteArray[0].mapstance === 2){
+					if(enemyArray.length === 0){
+						var x = Math.floor(Math.random() * iw-105)+1;
+						var enemy = new Image();
+						enemy.src = "RESOURCES/soldierRest1.png";
+						var en = new NPC(0,800,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+						enemyArray.push(en);
+
+						var x = Math.floor(Math.random() * iw-105)+1;
+						var enemy = new Image();
+						enemy.src = "RESOURCES/soldierRest1.png";
+						var en = new NPC(0,900,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+						enemyArray.push(en);
+
+						var x = Math.floor(Math.random() * iw-105)+1;
+						var enemy = new Image();
+						enemy.src = "RESOURCES/soldierRest1.png";
+						var en = new NPC(1,700,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+						enemyArray.push(en);
+					}
+
+				}
+				else if(spriteArray[0].mapstance === 3){
+					if(enemyArray.length === 0){
+						var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(0,500,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+
+				 	 var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(1,850,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+
+				 	 var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(1,700,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+					}
+
+				}
+				else if(spriteArray[0].mapstance === 1){
+					if(enemyArray.length === 0){
+						var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(0,500,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+
+				 	 var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(1,850,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+
+				 	 var x = Math.floor(Math.random() * iw-105)+1;
+				 	 var enemy = new Image();
+				 	 enemy.src = "RESOURCES/soldierRest1.png";
+				 	 var en = new NPC(1,300,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+				 	 enemyArray.push(en);
+					}
+
+				}
+
+				for (var x = 0; x <spriteCount; x++) {
+					enemyArray[x].update(anim);
+
+
+
+					for (var i = 0; i < enemyArray[x].bullets.length; i++) {
+							enemyArray[x].bullets[i].update(anim);
+							if(enemyArray[x].bullets[i].x >= iw || enemyArray[x].bullets[i].y <= 0){
+								enemyArray[x].bullets.splice(i,1);
+							}
+							if(enemyArray[x].bullets[i].p >= 4){
+								enemyArray[x].bullets.splice(i,1);
+							}
+							else if (enemyArray[x].bullets[i].x >= spriteArray[0].x && enemyArray[x].bullets[i].y <= spriteArray[0].y + spriteArray[0].height) {
+								if(enemyArray[x].bullets[i].x <= spriteArray[0].x + spriteArray[0].width && enemyArray[x].bullets[i].y > spriteArray[0].y){
+
+									if(pixelCollision(spriteArray[0],enemyArray[x].bullets[i])){
+										enemyArray[x].bullets[i].pop = 1;
+										spriteArray[0].state = 0;
+									}
+								}
+							}
+						}
+
+					if(spriteArray[0].d === 9){
+
+						var novo = new Sprite(50,floor,92,110,img,dx,dy,ctx,canvas,true,soundBoard);
+						novo.putNemIn(spriteArray[0].nem);
+						novo.mapstance = spriteArray[0].mapstance;
+						novo.lives = spriteArray[0].lives - 1;
+						novo.kills = spriteArray[0].kills;
+						d.innerHTML = "Lives: "+String(novo.lives);
+
+						spriteArray.splice(0,1);
+						spriteArray.push(novo);
+					}
+
+					for (var i = 0; i < spriteArray[0].grenadeArray.length; i++) {
+						spriteArray[0].grenadeArray[i].update(anim);
+
+						if(spriteArray[0].grenadeArray[i].state == 15){
+							spriteArray[0].grenadeArray.splice(i,1);
+						}else if(spriteArray[0].grenadeArray[i].canKill === 1 && (enemyArray[x].x <= spriteArray[0].grenadeArray[i].x + spriteArray[0].grenadeArray[i].width && enemyArray[x].x + enemyArray[x].width >= spriteArray[0].grenadeArray[i].x) ){
+							if(enemyArray[x].side === 1 || enemyArray[x].side === 3){
+								enemyArray[x].side = 5;
+							}
+							else if(enemyArray[x].side === 2 || enemyArray[x].side === 0){
+								enemyArray[x].side = 4;
+							}
+						}
+					}
+
+					if(spriteArray[0].grenadeArray.length >= 100){
+						spriteArray[0].grenadeArray.splice(0,spriteArray[0].grenadeArray.length)
+					}
+
+					if(enemyArray[x].side !== 4 &&  enemyArray[x].side !== 5){
+							if(spriteArray[0].x <= enemyArray[x].x ){
+								if(distance(spriteArray[0].x,enemyArray[x].x) > 650){
+									enemyArray[x].side = 0;
+								}else{
+									enemyArray[x].side = 2;
+								}
+							}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[x].x + enemyArray[x].width){
+								if(distance(spriteArray[0].x,enemyArray[x].x + enemyArray[x].width) > 650){
+									enemyArray[x].side = 1;
+								}else{
+									enemyArray[x].side = 3;
+								}
+							}
+					}
+					else if(enemyArray[x].sd === 5){
+						k.innerHTML = "KiLLs: "+String(spriteArray[0].kills);
+						spriteArray[0].nem--;
+						enemyArray.splice(x,1);
+						var t = Math.floor(Math.random() * 1);
+						spriteArray[0].kills++;
+
+						var t = Math.random();
+						if(t > 0.5){
+							t = 1;
+						}else {
+							t = 0;
+						}
+
+						if(enemyArray.length === 0 && spriteArray[0].mapstance === 3){
+							window.cancelAnimationFrame(anim);
+							localStorage.setItem("players1",document.getElementById('timer').innerHTML);
+							localStorage.setItem("players1kills",spriteArray[0].kills);
+
+							window.open("congratz.html");
+						}
+						else if(enemyArray.length === 0){
+							var x = Math.floor(Math.random() * iw-105)+1;
+			 		 	 	var enemy = new Image();
+			 		 	 	enemy.src = "RESOURCES/soldierRest1.png";
+			 		 	 	var en = new NPC(t,30,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
+			 		 	 	enemyArray.push(en);
+						}
+
+					}
+				}
+
+
+				if(t_check === "000"){
+					window.cancelAnimationFrame(anim);
+					wait(control);
+					window.sessionStorage.setItem("players1",document.getElementById('timer').innerHTML);
+					localStorage.setItem("players1kills",spriteArray[0].kills);
+
+					window.open("highscores.html");
+				}
+			}
+
 
 	}
 
@@ -109,14 +305,14 @@ function init(){
 	//--- controlo temporal
 	//-------------------------------------------------------------
 
-	function wait(control){
+	function wait(control){ /* timeout wait */
 		console.log("waiting...");
 		canvas.addEventListener("click",ReturnAction);
 		console.log(get);
 		setTimeout(wait,1000);
 	}
 
-	function ReturnAction(){
+	function ReturnAction(){ /* return to play action*/
 		clearTimeout(wait);
 		console.log("shit");
 		document.getElementById('timer').innerHTML = "0:10";
@@ -124,9 +320,160 @@ function init(){
 		canvas.removeEventListener("click",ReturnAction);
 	}
 
+	window.addEventListener("keypress",function(event){
+		if(event.keyCode === 27){
+			sessionStorage.setItem("timestop",1);
+			modal.style.display = "block";
+			paused = 1;
+			microOptions(soundBoard);
+		}
+	});
+	span.addEventListener("click", function() {
+			modal.style.display = "none";
+			paused = 0;
+			sessionStorage.setItem("timestop",0);
+			animate();
+			Timer();
+
+	});
+
+
 }
 
 
+function updateKills(){
+
+	var k = document.getElementsByTagName("p")[0];
+	var text = k.split();
+	console.log(text);
+
+
+
+}
+
+
+
+function microOptions(soundboard){
+
+
+			var myAudio = document.getElementById("aud");
+			var btnBack = document.getElementById("btnExit");
+			var onoff = document.getElementById("som");
+			var vol = sessionStorage.getItem("muted");
+			var onofffx = document.getElementById("somfx");
+			var volfx = sessionStorage.getItem("mutedfx");
+			var barValue = document.getElementById("myRangeV");
+			var bV = document.getElementById("rangeval");
+			var barValueF = document.getElementById("myRangeF");
+			var bF = document.getElementById("rangevalf");
+
+			bV.innerHTML = barValue.value+"%";
+			bF.innerHTML = barValueF.value+"%";
+			console.log(vol);
+
+			if(vol === 0){
+				vol = 1;
+			}
+			else if(vol == -1){
+				 onoff.src = "RESOURCES/SoundOff.png";
+			}
+
+			if(volfx === 0){
+				volfx = 1;
+			}
+			else if(volfx == -1){
+				 onofffx.src = "RESOURCES/SoundOff.png";
+			}
+
+
+			btnBack.addEventListener("click",function(){
+				sessionStorage.setItem("Time",myAudio.currentTime);
+				sessionStorage.setItem("Volume",myAudio.volume);
+				sessionStorage.setItem("mutedfx",volfx);
+				sessionStorage.setItem("muted",vol);
+				sessionStorage.setItem("soundBoard",soundboard);
+				window.location = "mainMenu.html";
+			});
+
+		onoff.addEventListener("click",function() {
+			vol *= -1;
+			console.log(vol);
+			if(vol === 1){
+					onoff.src = "RESOURCES/Soundon.png";
+					myAudio.muted = false;
+
+			}else{
+					onoff.src = "RESOURCES/SoundOff.png";
+					myAudio.muted = true;
+
+			}
+
+		});
+
+		onofffx.addEventListener("click",function() {
+		 volfx *= -1;
+		 if(volfx === 1){
+				onofffx.src = "RESOURCES/Soundon.png";
+				soundboard.setMuted(false);
+
+		 }else{
+				onofffx.src = "RESOURCES/SoundOff.png";
+				soundboard.setMuted(true);
+		 }
+		 console.log(soundboard.audio.muted);
+
+		});
+
+
+		 barValue.addEventListener("input",function(e){
+			 bV.innerHTML = barValue.value+"%";
+			 myAudio.volume = barValue.value/100;
+		 });
+
+		 barValueF.addEventListener("input",function(e){
+			 bF.innerHTML = barValueF.value+"%";
+			 sessionStorage.setItem("Volumefx",barValueF.value/100);
+			 soundboard.setVolume(barValueF.value/100);
+		 });
+		 barValueF.addEventListener("mouseout", function(){
+			 console.log("go");
+			 soundboard.SoldierShoot();
+		 });
+
+
+}
+
+function mapSet(mapHandler,enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k){
+	if (spriteArray[0].x + spriteArray[0].width < 0 && spriteArray[0].mapstance > 1) {
+
+	 spriteArray[0].x = spriteArray[0].canvas.scrollWidth;
+	 spriteArray[0].mapstance--;
+	 spriteArray[0].dy = 0;
+	 enemyArray = [];
+ }
+ else if (spriteArray[0].x > spriteArray[0].canvas.scrollWidth && spriteArray[0].mapstance < 3) {
+	 spriteArray[0].mapstance++;
+	 spriteArray[0].x = 0;
+	 spriteArray[0].dy = 0;
+	 enemyArray=[];
+	 enemyArray = [];
+
+
+
+ }else if (spriteArray[0].x <= 0 && spriteArray[0].mapstance === 1) {
+	 spriteArray[0].mapstance = 1;
+	 spriteArray[0].x = 0;
+	 spriteArray[0].dy = 0;
+
+ }else if (spriteArray[0].x+spriteArray[0].width > spriteArray[0].canvas.scrollWidth && spriteArray[0].mapstance === 3) {
+	 spriteArray[0].mapstance = 3;
+	 spriteArray[0].x = this.canvas.scrollWidth-this.width;
+	 spriteArray[0].dy = 0;
+
+ }
+ spriteArray[0].canvas.style.backgroundImage = "url('RESOURCES/map"+String(spriteArray[0].lvl)+""+String(spriteArray[0].mapstance)+".png')";
+	return enemyArray;
+}
 
 function keyUpHandle(control,event){
 	var key_state = false;
@@ -268,9 +615,16 @@ function pixelCollision(s1,s2){
 function Timer() {
   var presentTime = document.getElementById('timer').innerHTML;
 	var t_check = String(presentTime[0]+""+presentTime[2]+""+presentTime[3]);
+	var stop = sessionStorage.getItem("timestop");
+	var timer;
+
 
 	if(t_check !== "000"){
-		setTimeout(Timer, 1000);
+		timer = setTimeout(Timer, 1000);
+		console.log(timer);
+		if(parseInt(stop) === 1){
+			clearTimeout(timer);
+		}
 		var timeArray = presentTime.split(/[:]+/);
 		var m = timeArray[0];
 		var s = Segundos((timeArray[1] - 1));
@@ -296,98 +650,9 @@ function Segundos(sec) {
   return sec;
 }
 
-function mapHandle(){
-
-}
-
 function coreAnimator(enemyArray,spriteArray,anim,img,iw,ih,ctx,canvas,soundBoard,k){
 	var x;
-	for (var x = 0; x < 2; x++) {
-		enemyArray[x].update(anim);
 
-
-
-		for (var i = 0; i < enemyArray[x].bullets.length; i++) {
-				enemyArray[x].bullets[i].update(anim);
-				if(enemyArray[x].bullets[i].x >= iw || enemyArray[x].bullets[i].y <= 0){
-					enemyArray[x].bullets.splice(i,1);
-				}
-				if(enemyArray[x].bullets[i].p >= 4){
-					enemyArray[x].bullets.splice(i,1);
-				}
-				else if (enemyArray[x].bullets[i].x >= spriteArray[0].x && enemyArray[x].bullets[i].y <= spriteArray[0].y + spriteArray[0].height) {
-					if(enemyArray[x].bullets[i].x <= spriteArray[0].x + spriteArray[0].width && enemyArray[x].bullets[i].y > spriteArray[0].y){
-
-						if(pixelCollision(spriteArray[0],enemyArray[x].bullets[i])){
-							enemyArray[x].bullets[i].pop = 1;
-							spriteArray[0].state = 0;
-						}
-					}
-				}
-			}
-
-		if(spriteArray[0].d === 9){
-
-			spriteArray.splice(0,1);
-			var a = Math.floor(Math.random() * iw-105)+1;
-			var novo = new Sprite(a,y,92,110,img,dx,dy,ctx,canvas,true,soundBoard);
-			spriteArray.push(novo);
-		}
-
-		for (var i = 0; i < spriteArray[0].grenadeArray.length; i++) {
-			spriteArray[0].grenadeArray[i].update(anim);
-
-			if(spriteArray[0].grenadeArray[i].state == 15){
-				spriteArray[0].grenadeArray.splice(i,1);
-			}else if(spriteArray[0].grenadeArray[i].canKill === 1 && (enemyArray[x].x <= spriteArray[0].grenadeArray[i].x + spriteArray[0].grenadeArray[i].width && enemyArray[x].x + enemyArray[x].width >= spriteArray[0].grenadeArray[i].x) ){
-				if(enemyArray[x].side === 1 || enemyArray[x].side === 3){
-					enemyArray[x].side = 5;
-				}
-				else if(enemyArray[x].side === 2 || enemyArray[x].side === 0){
-					enemyArray[x].side = 4;
-				}
-			}
-		}
-
-		if(spriteArray[0].grenadeArray.length >= 100){
-			spriteArray[0].grenadeArray.splice(0,spriteArray[0].grenadeArray.length)
-		}
-
-		if(enemyArray[x].side !== 4 &&  enemyArray[x].side !== 5){
-				if(spriteArray[0].x <= enemyArray[x].x ){
-					if(distance(spriteArray[0].x,enemyArray[x].x) > 650){
-						enemyArray[x].side = 0;
-					}else{
-						enemyArray[x].side = 2;
-					}
-				}else if(spriteArray[0].x + spriteArray[0].width > enemyArray[x].x + enemyArray[x].width){
-					if(distance(spriteArray[0].x,enemyArray[x].x + enemyArray[x].width) > 650){
-						enemyArray[x].side = 1;
-					}else{
-						enemyArray[x].side = 3;
-					}
-				}
-		}
-		else if(enemyArray[x].sd === 5){
-			k.innerHTML = String(spriteArray[0].kills);
-			enemyArray.splice(x,1);
-			var t = Math.floor(Math.random() * 1);
-			spriteArray[0].kills++;
-
-			var t = Math.random();
-			if(t > 0.5){
-				t = 1;
-			}else {
-				t = 0;
-			}
-			var x = Math.floor(Math.random() * iw-105)+1;
-			var enemy = new Image();
-			enemy.src = "RESOURCES/soldierRest1.png";
-			var en = new NPC(t,x,y,145,112,enemy,dx,dy,ctx,canvas,soundBoard);
-			enemyArray.push(en);
-
-		}
-	}
 
 	return [spriteArray,enemyArray];
 

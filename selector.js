@@ -58,7 +58,7 @@ function main() {
 		});
 
 		btnM.addEventListener("click",function(){
-			window.open("game.html");
+			window.open("GameType.html");
 			popup.postMessage("go");
 			console.log("sent");
 			window.href =""

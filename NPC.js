@@ -14,8 +14,8 @@ const shootenemy1 = ["RESOURCES/soldiershoot1l.png","RESOURCES/soldiershoot2l.pn
 const die= ["RESOURCES/soldierdie1.png","RESOURCES/soldierdie2.png","RESOURCES/soldierdie3.png","RESOURCES/soldierdie4.png","RESOURCES/soldierdie4.png"];
 const die1= ["RESOURCES/soldierdie1l.png","RESOURCES/soldierdie2l.png","RESOURCES/soldierdie3l.png","RESOURCES/soldierdie4l.png","RESOURCES/soldierdie4l.png"];
 const bullet2 = ["RESOURCES/bullet.png","RESOURCES/ball1.png"];
-
-
+const frictiony = 0.95;
+const velX = 2;
 
 class NPC{
 
@@ -32,11 +32,11 @@ class NPC{
 		this.dy = speedy;
 		this.ctx = ctx;
 		this.canvas = canvas;
-		this.sw = 0;
-		this.sh = 0;
-		this.sd = 0;
-		this.rb = 1;
-		this.side = 2;
+		this.sw = 0; /* rest animator increment*/
+		this.sh = 0; /* die animator increment*/
+		this.sd = 0; /* shoot animator increment*/
+		this.rb = 1; /* shoot animator increment left*/
+		this.side = 2; /* direcao inicial*/
 		this.bullets = [];
 		this.tipo = tipo;
 		this.audio = soundBoard;
@@ -62,30 +62,30 @@ class NPC{
 		this.draw(this.ctx);
 
 
-		if(this.side === 0){
+		if(this.side === 0){ /* rest left*/
 			this.width = 145;
 			this.rest(anim);
-		}else if(this.side === 1){
+		}else if(this.side === 1){ /* rest right*/
 			this.width = 145;
 			this.rest1(anim);
-		}else if(this.side === 2){
+		}else if(this.side === 2){ /* shoot left*/
 			this.width = 188;
 			this.shoot(anim);
-		}else if(this.side === 3){
+		}else if(this.side === 3){ /* shoot right*/
 			this.width = 188;
 			this.shoot1(anim);
-		}else if(this.side === 4){
+		}else if(this.side === 4){ /* die right*/
 			this.width = 145;
 			this.actiondie(anim);
-		}else if(this.side === 5){
+		}else if(this.side === 5){ /* die right*/
 			this.width = 145;
 			this.actiondie1(anim);
 		}
 
 
-		this.dy += 2;
+		this.dy += velX;
 		this.y += this.dy;
-		this.dy *= 0.95;
+		this.dy *= frictiony;
 
 		if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
 				this.y = this.canvas.scrollHeight-(2*this.height);

@@ -10,7 +10,7 @@ class Controller{
 		this.trow = false; /*trow object*/
 		this.space = false; /*jump sprite*/
 
-		this.exit = 1;
+		this.exit = 1; /* exit */
 	}
 
 }

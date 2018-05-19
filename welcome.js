@@ -9,9 +9,9 @@
 
 function main() {
 
-		var modal = document.getElementById('myModal');
+		var modal = document.getElementById('myModal'); /* modal popup elemento*/
 		var btn = document.getElementById("modalEvent");
-		var span = document.getElementsByClassName("close")[0];
+		var span = document.getElementsByClassName("close")[0]; /* botao exit modal*/
 
 		btn.addEventListener("click", function(){
 		    modal.style.display = "block";
@@ -26,6 +26,11 @@ function main() {
 		});
 
 	window.addEventListener("message", receiveMessage, false);
+
+	//----------------------------------------------------------------------------------------
+	//--- INICIALIZACAO DE DADOS EM SESSION STORAGE 
+	//----------------------------------------------------------------------------------------
+
 	var myAudio = document.getElementById("aud");
 	var btnNext = document.getElementById("next");
 	sessionStorage.setItem('SoundOn', 1);

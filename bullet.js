@@ -1,7 +1,9 @@
-
-const popup1 = ["RESOURCES/blood1.png","RESOURCES/blood2.png","RESOURCES/blood3.png","RESOURCES/blood4.png"];
-const ballAct = ["RESOURCES/ball1.png","RESOURCES/ball2.png","RESOURCES/ball3.png","RESOURCES/ball4.png"]
-
+const yGap = 35;
+const popup1 = ["RESOURCES/blood1.png","RESOURCES/blood2.png","RESOURCES/blood3.png","RESOURCES/blood4.png"]; /* animacao de sangue para colisao */
+const ballAct = ["RESOURCES/ball1.png","RESOURCES/ball2.png","RESOURCES/ball3.png","RESOURCES/ball4.png"] /* animacao de bola a rodar*/
+const frictionX = 0.7;
+const frictionY = 0.8;
+const widthProporsion = 70;
 
 class Bullet{
 
@@ -13,15 +15,15 @@ class Bullet{
 		this.ctx = ctx;
 		this.canvas = canvas;
 		this.img = img;
-		this.heightJam = hj;
+		this.heightJam = hj; /* intrevalo de colisao para chao*/
 		this.time = 0;
 		this.height = h;
 		this.width = w;
-		this.hy = this.y -35;
-		this.pop  = 0;
-		this.p = 0;
-		this.st = 0;
-		this.type = type;
+		this.hy = this.y - yGap ;
+		this.pop  = 0; /* estado de animcao de colisao*/
+		this.p = 0; /* estado de final de animacao*/
+		this.st = 0; /* controlador de animacao ballAct*/
+		this.type = type; /* tipo de sprite */
 
 		var newCan = document.createElement("canvas");
 		this.newCtx = newCan.getContext("2d");
@@ -37,18 +39,18 @@ class Bullet{
 	update(time){
 
 		if(this.pop != 1){
-			this.x += this.dx*0.7;
-			this.y += this.dy*0.8;
+			this.x += this.dx*frictionX;
+			this.y += this.dy*frictionY;
 		}else{
 			this.x += 0;
 			this.y = this.hy;
-			this.width = this.height = 70;
+			this.width = this.height = widthProporsion;
 			this.hit(time);
 
 		}
 
 		if(this.y + this.height > this.canvas.scrollHeight-this.heightJam) {
-				this.y = this.canvas.scrollHeight-(4*this.height)-8;
+				this.y = this.canvas.scrollHeight-(4*this.height)-8; /* 4-> height proporsion 8-> offset*/
 				this.dy = 0;
 		}
 
@@ -70,7 +72,7 @@ class Bullet{
 			return [x,y,w,h];
 	}
 
-	hit(frame){
+	hit(frame){ /* animacao colisao*/
 		var x = frame % 2;
 		if(x === 1){
 			this.img.src = popup1[this.p % 4];
@@ -79,7 +81,7 @@ class Bullet{
 	}
 
 
-	rollBall(frame){
+	rollBall(frame){ /* animador para rodar*/
 		var x = frame % 6;
 		if(x === 1){
 			this.img.src = ballAct[this.st % 4];

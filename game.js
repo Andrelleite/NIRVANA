@@ -314,7 +314,6 @@ function init(){
 
 	function ReturnAction(){ /* return to play action*/
 		clearTimeout(wait);
-		console.log("shit");
 		document.getElementById('timer').innerHTML = "0:10";
 		window.requestAnimationFrame(animate)
 		canvas.removeEventListener("click",ReturnAction);
@@ -345,7 +344,6 @@ function updateKills(){
 
 	var k = document.getElementsByTagName("p")[0];
 	var text = k.split();
-	console.log(text);
 
 
 
@@ -369,7 +367,6 @@ function microOptions(soundboard){
 
 			bV.innerHTML = barValue.value+"%";
 			bF.innerHTML = barValueF.value+"%";
-			console.log(vol);
 
 			if(vol === 0){
 				vol = 1;
@@ -397,7 +394,6 @@ function microOptions(soundboard){
 
 		onoff.addEventListener("click",function() {
 			vol *= -1;
-			console.log(vol);
 			if(vol === 1){
 					onoff.src = "RESOURCES/Soundon.png";
 					myAudio.muted = false;
@@ -420,7 +416,6 @@ function microOptions(soundboard){
 				onofffx.src = "RESOURCES/SoundOff.png";
 				soundboard.setMuted(true);
 		 }
-		 console.log(soundboard.audio.muted);
 
 		});
 
@@ -436,7 +431,6 @@ function microOptions(soundboard){
 			 soundboard.setVolume(barValueF.value/100);
 		 });
 		 barValueF.addEventListener("mouseout", function(){
-			 console.log("go");
 			 soundboard.SoldierShoot();
 		 });
 
@@ -542,7 +536,6 @@ function windowChangerHandeler(){
 
 	var popup = window.open("mainMenu.html");
 	popup.postMessage("go");
-	console.log("sent");
 	window.href =""
 }
 
@@ -589,10 +582,11 @@ function getDataOfImage(img,x,y,w,h){
 		for(var x=0;x<w;x++)
 		{
 			var p=(y*w+x)*4;
-			pixels[i]=(rgb[p+3]<<24)|(rgb[p]<< 16)|(rgb[p+1]<<8)|rgb[p+2];
+			pixels[i]= (rgb[p+3]<<24) | (rgb[p]<< 16) | (rgb[p+1]<<8) | rgb[p+2]; /* ocupar niveis rgba 8 bits cada para cor 1  bit para opacidade*/
 			i++;
 		}
 	}
+
 	return pixels;
 }
 
@@ -603,7 +597,7 @@ function pixelCollision(s1,s2){
 		var pixels2 = getDataOfImage(s2.img,r[0]-s2.x,r[1]-s2.y,r[2],r[3]);
 		for(var i=0;i<pixels1.length;i++)
 		{
-			if(pixels1[i]!=0 && pixels2[i]!=0)
+			if(pixels1[i]!=0 && pixels2[i]!=0) /*ver se existe opacidade*/
 			{
 				return true;
 			}
@@ -621,7 +615,6 @@ function Timer() {
 
 	if(t_check !== "000"){
 		timer = setTimeout(Timer, 1000);
-		console.log(timer);
 		if(parseInt(stop) === 1){
 			clearTimeout(timer);
 		}

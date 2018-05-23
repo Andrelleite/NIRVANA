@@ -206,25 +206,6 @@ function init(){
 	animate();
 
 
-	//-------------------------------------------------------------
-	//--- controlo temporal
-	//-------------------------------------------------------------
-
-	// function wait(control){
-	// 	console.log("waiting...");
-	// 	canvas.addEventListener("click",ReturnAction);
-	// 	console.log(get);
-	// 	setTimeout(wait,1000);
-	// }
-	//
-	// function ReturnAction(){
-	// 	clearTimeout(wait);
-	// 	console.log("shit");
-	// 	document.getElementById('timer').innerHTML = "0:10";
-	// 	window.requestAnimationFrame(animate)
-	// 	canvas.removeEventListener("click",ReturnAction);
-	// }
-
 
 	//-------------------------------------------------------------
 	//--- PAUSE MENU
@@ -355,7 +336,7 @@ function randomSpawn(enemyArray,iw,ih,ctx,canvas,soundBoard){
 	}else {
 		t = 0; /* grenade soldier*/
 	}
-	var x = Math.floor(Math.random() * iw-105)+10;
+	var x = Math.floor(Math.random() * iw-105)+30;
 	var enemy = new Image();
 	enemy.src = "RESOURCES/soldierRest1.png";
 	var en = new NPC(t,x,floor,145,112,enemy,dx,dy,ctx,canvas,soundBoard); /* criacao de novo NPC*/
@@ -509,7 +490,8 @@ function getDataOfImage(img,x,y,w,h){ /* Obtencao da pixel sheet de cada sprite*
 		for(var x=0;x<w;x++)
 		{
 			var p=(y*w+x)*4;
-			pixels[i]=(rgb[p+3]<<24)|(rgb[p]<< 16)|(rgb[p+1]<<8)|rgb[p+2];
+			pixels[i]=(rgb[p+3
+			]<<24)|(rgb[p]<< 16)|(rgb[p+1]<<8)|rgb[p+2]; /* começa pela opacidade e é o "bit" mais significativo se for 0 tudo resto é 0*/
 			i++;
 		}
 	}

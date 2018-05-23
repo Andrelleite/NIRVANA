@@ -17,7 +17,7 @@ canvas{
   bottom: 0;
   left: 45%;
   right: 0;
-  background: url("../RESOURCES/MS4Mission1.png") no-repeat;
+  background: url("RESOURCES/MS4Mission1.png") no-repeat;
   background-size: cover;
   position: absolute;
 }

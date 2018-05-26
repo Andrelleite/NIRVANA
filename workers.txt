@@ -1,0 +1,10 @@
+NUMERO_TAREFAS_MAXIMO: 3
+
+Formato correto -> [nome,idade,email,ID]
+
+Andre leite,20,leiteandre@gmail.com,1,
+Luisa Leite,51,luisamcleite@gmail.com,2,
+Paulo Daniel,57,paulodcabraleite@hotmail.com,3,
+Patricia Vieira,21,pisabelvi@gmail.com,4,
+Ana Goncalves,30,anagoncalves@gmail.com,5,
+Ze Antonio,32,zeto@outlook.com,13,
